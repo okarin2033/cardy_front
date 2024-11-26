@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+// src/components/CreateDeck.js
+import React, { useState, useContext } from 'react';
+import axios from '../axiosConfig';
+import { AuthContext } from '../context/AuthContext';
 
-const CreateDeck = ({ onDeckCreated, onCancel, userId }) => {
+const CreateDeck = ({ onDeckCreated, onCancel }) => {
+  const { auth } = useContext(AuthContext);
   const [name, setName] = useState('');
   const [error, setError] = useState('');
 
@@ -13,17 +16,9 @@ const CreateDeck = ({ onDeckCreated, onCancel, userId }) => {
     }
 
     try {
-      const response = await axios.post('http://localhost:8080/v1/decks', 
-        { 
-          name: name.trim(),
-          userId: userId,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        }
-      );
+      const response = await axios.post('/decks', { 
+        name: name.trim(),
+      });
       onDeckCreated(response.data);
       onCancel(); // Закрываем форму после успешного создания
     } catch (error) {

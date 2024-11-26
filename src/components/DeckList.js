@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+// src/components/DeckList.js
+import React, { useState, useEffect, useContext } from 'react';
+import axios from '../axiosConfig';
 import CreateDeck from './CreateDeck';
-import Review from './Review';
+import { AuthContext } from '../context/AuthContext';
 
-const DeckList = ({ userId, onSelectDeck, onReviewDeck }) => {
+const DeckList = ({ onSelectDeck, onReviewDeck }) => {
   const [decks, setDecks] = useState([]);
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState('');
+  const { auth } = useContext(AuthContext);
 
   const fetchDecks = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/v1/decks/by-user/${userId}`);
+      const response = await axios.get('/decks');
       setDecks(response.data);
     } catch (error) {
       setError('Ошибка при загрузке коллекций');
@@ -19,8 +21,10 @@ const DeckList = ({ userId, onSelectDeck, onReviewDeck }) => {
   };
 
   useEffect(() => {
-    fetchDecks();
-  }, [userId]);
+    if (auth.isAuthenticated) {
+      fetchDecks();
+    }
+  }, [auth.isAuthenticated]);
 
   const handleDeckCreated = (newDeck) => {
     fetchDecks(); // Обновляем список после создания
@@ -29,7 +33,7 @@ const DeckList = ({ userId, onSelectDeck, onReviewDeck }) => {
 
   const handleDeleteDeck = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/v1/decks/${id}`);
+      await axios.delete(`/decks/${id}`);
       fetchDecks(); // Обновляем список после удаления
     } catch (error) {
       setError('Ошибка при удалении коллекции');
@@ -42,7 +46,6 @@ const DeckList = ({ userId, onSelectDeck, onReviewDeck }) => {
       <CreateDeck
         onDeckCreated={handleDeckCreated}
         onCancel={() => setIsCreating(false)}
-        userId={userId}
       />
     );
   }

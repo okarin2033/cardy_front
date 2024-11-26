@@ -1,5 +1,6 @@
+// src/components/CardList.js
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../axiosConfig';
 
 const CardList = ({ deckId }) => {
   const [cards, setCards] = useState([]);
@@ -8,7 +9,7 @@ const CardList = ({ deckId }) => {
 
   const fetchCards = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/v1/cards/deck/${deckId}`);
+      const response = await axios.get(`/cards/deck/${deckId}`);
       setCards(response.data);
     } catch (error) {
       console.error('Ошибка при получении карточек:', error);
@@ -34,7 +35,7 @@ const CardList = ({ deckId }) => {
     };
 
     try {
-      const response = await axios.post('http://localhost:8080/v1/cards', cardToCreate);
+      const response = await axios.post('/cards', cardToCreate);
       setCards([...cards, response.data]);
       setNewCard({ front: '', back: '', hint: '' });
     } catch (error) {
@@ -45,7 +46,7 @@ const CardList = ({ deckId }) => {
 
   const deleteCard = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/v1/cards/${id}`);
+      await axios.delete(`/cards/${id}`);
       setCards(cards.filter(card => card.id !== id));
     } catch (error) {
       console.error('Ошибка при удалении карточки:', error);

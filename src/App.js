@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from 'react';
+// src/App.js
+import React, { useState, useContext } from 'react';
 import DeckList from './components/DeckList';
 import CardList from './components/CardList';
 import Review from './components/Review';
 import Navbar from './components/Navbar';
+import Profile from './components/Profile';
 import './App.css';
+import { AuthContext } from './context/AuthContext';
 
 function App() {
   const [currentTab, setCurrentTab] = useState('home');
   const [selectedDeckId, setSelectedDeckId] = useState(null);
-  const userId = 0; // Используем userId=0 по умолчанию
+  const { auth } = useContext(AuthContext);
 
   const handleSelectDeck = (deckId) => {
     setSelectedDeckId(deckId);
@@ -23,18 +26,19 @@ function App() {
   return (
     <div className="app-container">
       <Navbar currentTab={currentTab} setCurrentTab={setCurrentTab} />
-      {currentTab === 'home' && (
+      {currentTab === 'home' && auth.isAuthenticated && (
         <DeckList
-          userId={userId}
           onSelectDeck={handleSelectDeck}
           onReviewDeck={handleReviewDeck}
         />
       )}
-      {currentTab === 'settings' && (
-        <div className="settings">
-          <h2>Настройки</h2>
-          <p>Здесь будут настройки.</p>
+      {currentTab === 'home' && !auth.isAuthenticated && (
+        <div className="welcome-message">
+          <h2>Добро пожаловать! Пожалуйста, войдите или зарегистрируйтесь.</h2>
         </div>
+      )}
+      {currentTab === 'profile' && (
+        <Profile />
       )}
       {currentTab === 'deck' && selectedDeckId !== null && (
         <div>
@@ -47,7 +51,6 @@ function App() {
           <button className="back-button" onClick={() => setCurrentTab('home')}>Назад к коллекциям</button>
           <Review
             deckId={selectedDeckId}
-            userId={userId}
             onFinish={() => setCurrentTab('home')}
           />
         </div>

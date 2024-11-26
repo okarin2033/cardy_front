@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+// src/components/Review.js
+import React, { useState, useEffect, useContext } from 'react';
+import axios from '../axiosConfig';
+import { AuthContext } from '../context/AuthContext';
 
-const Review = ({ deckId, userId, onFinish }) => {
+const Review = ({ deckId, onFinish }) => {
+  const { auth } = useContext(AuthContext);
   const [cardsToReview, setCardsToReview] = useState([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [showBack, setShowBack] = useState(false);
@@ -11,14 +14,14 @@ const Review = ({ deckId, userId, onFinish }) => {
   useEffect(() => {
     fetchCardsForReview();
     // eslint-disable-next-line
-  }, [deckId, userId]);
+  }, [deckId]);
 
   const fetchCardsForReview = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/v1/review/cards', {
+      const response = await axios.get('/review/cards', {
         params: {
           deckId: deckId,
-          userId: userId,
+          // userId: auth.user?.id, // Удаляем userId
         },
       });
       setCardsToReview(response.data);
@@ -32,7 +35,7 @@ const Review = ({ deckId, userId, onFinish }) => {
     const currentCard = cardsToReview[currentCardIndex];
 
     try {
-      await axios.post('http://localhost:8080/v1/review/cards', {
+      await axios.post('/review/cards', {
         userCardId: currentCard.cardId,
         action: action,
       });
