@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const CreateDeck = ({ onDeckCreated, onCancel }) => {
+const CreateDeck = ({ onDeckCreated, onCancel, userId }) => {
   const [name, setName] = useState('');
   const [error, setError] = useState('');
 
@@ -16,12 +16,11 @@ const CreateDeck = ({ onDeckCreated, onCancel }) => {
       const response = await axios.post('http://localhost:8080/v1/decks', 
         { 
           name: name.trim(),
-          cards: []
+          userId: userId,
         },
         {
           headers: {
             'Content-Type': 'application/json',
-            'User-ID': '0'
           }
         }
       );

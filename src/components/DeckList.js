@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import CreateDeck from './CreateDeck';
+import Review from './Review';
 
-const DeckList = ({ onSelectDeck }) => {
+const DeckList = ({ userId, onSelectDeck, onReviewDeck }) => {
   const [decks, setDecks] = useState([]);
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState('');
 
   const fetchDecks = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/v1/decks', {
-        headers: {
-          'User-ID': '0'
-        }
-      });
+      const response = await axios.get(`http://localhost:8080/v1/decks/by-user/${userId}`);
       setDecks(response.data);
     } catch (error) {
       setError('Ошибка при загрузке коллекций');
@@ -23,7 +20,7 @@ const DeckList = ({ onSelectDeck }) => {
 
   useEffect(() => {
     fetchDecks();
-  }, []);
+  }, [userId]);
 
   const handleDeckCreated = (newDeck) => {
     fetchDecks(); // Обновляем список после создания
@@ -45,6 +42,7 @@ const DeckList = ({ onSelectDeck }) => {
       <CreateDeck
         onDeckCreated={handleDeckCreated}
         onCancel={() => setIsCreating(false)}
+        userId={userId}
       />
     );
   }
@@ -60,13 +58,17 @@ const DeckList = ({ onSelectDeck }) => {
         {decks.map(deck => (
           <div key={deck.id} className="deck-card">
             <h3>{deck.name}</h3>
-            <p>{deck.cards?.length || 0} карточек</p>
+            <p>Количество карточек: {deck.count}</p>
+            <p className="need-review">
+              <span className="review-icon">🔄</span>
+              {deck.needReview} нуждаются в повторении
+            </p>
             <div className="deck-actions">
-              <button onClick={() => onSelectDeck(deck.id)}>Открыть</button>
-              <button 
-                className="delete-button"
-                onClick={() => handleDeleteDeck(deck.id)}
-              >
+              <button className="open-button" onClick={() => onSelectDeck(deck.id)}>Открыть</button>
+              <button className="repeat-button" onClick={() => onReviewDeck(deck.id)}>
+                Повторить {deck.needReview > 0 && `(${deck.needReview})`}
+              </button>
+              <button className="delete-button" onClick={() => handleDeleteDeck(deck.id)}>
                 Удалить
               </button>
             </div>
