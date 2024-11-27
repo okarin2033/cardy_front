@@ -36,6 +36,10 @@
   --error-color: #f44336;
   --tooltip-background: rgba(0, 0, 0, 0.8);
   --tooltip-text: #ffffff;
+  --background-color: #ffffff;
+  --border-color: #dee2e6;
+  --primary-color: #4299e1;
+  --primary-color-transparent: rgba(66, 153, 225, 0.5);
 }
 
 .dark-theme {
@@ -73,4 +77,36 @@
   --card-border: #353b48;
   --tooltip-background: rgba(255, 255, 255, 0.9);
   --tooltip-text: #000000;
+  --background-color: #242832;
+  --border-color: #353b48;
+  --primary-color: #4299e1;
+  --primary-color-transparent: rgba(66, 153, 225, 0.5);
+}
+
+/* Стили для select в светлой и темной теме */
+select {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 0.5rem;
+  cursor: pointer;
+  outline: none;
+}
+
+select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px var(--primary-color-transparent);
+}
+
+/* Стили для option в темной теме */
+.dark-theme select option {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+/* Стили для option в светлой теме */
+.light-theme select option {
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
