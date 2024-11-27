@@ -22,7 +22,6 @@ const Review = ({ deckId, onFinish }) => {
       const response = await axios.get('/review/cards', {
         params: {
           deckId: deckId,
-          // userId: auth.user?.id, // Удаляем userId
         },
       });
       setCardsToReview(response.data);
@@ -64,7 +63,7 @@ const Review = ({ deckId, onFinish }) => {
     return (
       <div>
         <h3>Нет карточек для повторения в этой колоде</h3>
-        <button onClick={onFinish} className="back-to-deck">
+        <button onClick={onFinish} className="review-back-button">
           <i className="fas fa-arrow-left"></i> Вернуться к колоде
         </button>
       </div>
@@ -76,24 +75,24 @@ const Review = ({ deckId, onFinish }) => {
   return (
     <div className="review-container">
       <div className="review-content">
-        <button onClick={onFinish} className="back-button">
+        <button onClick={onFinish} className="review-back-button">
           <i className="fas fa-arrow-left"></i> Вернуться к колоде
         </button>
         <h3>Повторение карточек</h3>
         {error && <div className="error-message">{error}</div>}
         
         <div className="review-card" onClick={() => setShowBack(!showBack)}>
-          <div className="card-front-back">
-            <div className="card-content">
+          <div className="review-card-content">
+            <div className="review-card-text">
               {showBack ? currentCard.back : currentCard.front}
             </div>
             {currentCard.hint && !showBack && (
-              <div className="card-hint">
+              <div className="review-hint">
                 {showHint ? (
                   <span>{currentCard.hint}</span>
                 ) : (
                   <button 
-                    className="hint-button" 
+                    className="review-hint-button" 
                     onClick={(e) => { 
                       e.stopPropagation(); 
                       toggleHint(); 
@@ -114,25 +113,25 @@ const Review = ({ deckId, onFinish }) => {
         <div className="review-actions">
           <button 
             onClick={() => handleReviewAction('AGAIN')}
-            className="again-button"
+            className="review-again-button"
           >
             Повторить
           </button>
           <button 
             onClick={() => handleReviewAction('HARD')}
-            className="hard-button"
+            className="review-hard-button"
           >
             Трудно
           </button>
           <button 
             onClick={() => handleReviewAction('GOOD')}
-            className="good-button"
+            className="review-good-button"
           >
             Хорошо
           </button>
           <button 
             onClick={() => handleReviewAction('EASY')}
-            className="easy-button"
+            className="review-easy-button"
           >
             Легко
           </button>

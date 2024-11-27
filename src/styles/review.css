@@ -45,7 +45,7 @@
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-.card-front-back {
+.review-card-content {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -54,7 +54,7 @@
   position: relative;
 }
 
-.card-content {
+.review-card-text {
   font-size: 1.5rem;
   text-align: center;
   color: var(--text-primary);
@@ -62,13 +62,13 @@
   width: 100%;
 }
 
-.card-hint {
+.review-hint {
   position: absolute;
   bottom: -20px;
   right: 0;
 }
 
-.hint-button {
+.review-hint-button {
   background: none;
   border: none;
   font-size: 1.5rem;
@@ -78,11 +78,11 @@
   transition: transform 0.2s ease;
 }
 
-.hint-button:hover {
+.review-hint-button:hover {
   transform: scale(1.1);
 }
 
-.card-hint span {
+.review-hint span {
   font-size: 0.9rem;
   color: var(--text-secondary);
   font-style: italic;
@@ -115,35 +115,35 @@
   max-width: 150px;
 }
 
-.review-actions .again-button {
+.review-actions .review-again-button {
   background-color: var(--button-danger);
 }
 
-.review-actions .again-button:hover {
+.review-actions .review-again-button:hover {
   background-color: var(--button-danger-hover);
 }
 
-.review-actions .hard-button {
+.review-actions .review-hard-button {
   background-color: var(--button-secondary);
 }
 
-.review-actions .hard-button:hover {
+.review-actions .review-hard-button:hover {
   background-color: var(--button-secondary-hover);
 }
 
-.review-actions .good-button {
+.review-actions .review-good-button {
   background-color: var(--button-primary);
 }
 
-.review-actions .good-button:hover {
+.review-actions .review-good-button:hover {
   background-color: var(--button-primary-hover);
 }
 
-.review-actions .easy-button {
+.review-actions .review-easy-button {
   background-color: var(--button-action);
 }
 
-.review-actions .easy-button:hover {
+.review-actions .review-easy-button:hover {
   background-color: var(--button-action-hover);
 }
 
@@ -169,7 +169,7 @@
   margin: 0;
 }
 
-.back-button {
+.review-back-button {
   position: absolute;
   top: -20px;
   left: -80px;
@@ -187,11 +187,11 @@
   z-index: 1;
 }
 
-.back-button:hover {
+.review-back-button:hover {
   background-color: var(--button-secondary-hover);
   transform: translateX(2px);
 }
 
-.back-button i {
+.review-back-button i {
   font-size: 1rem;
 }
