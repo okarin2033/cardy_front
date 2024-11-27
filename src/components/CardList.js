@@ -13,6 +13,7 @@ const CardList = ({ deckId, onStartReview, onBack }) => {
   const [error, setError] = useState('');
   const [sortBy, setSortBy] = useState('');
   const [filterBy, setFilterBy] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [reviewCount, setReviewCount] = useState(0);
 
@@ -74,6 +75,16 @@ const CardList = ({ deckId, onStartReview, onBack }) => {
   const filterCards = (cards) => {
     let filtered = [...cards];
 
+    // Apply search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(card => 
+        card.front.toLowerCase().includes(query) || 
+        card.back.toLowerCase().includes(query) ||
+        (card.hint && card.hint.toLowerCase().includes(query))
+      );
+    }
+
     // Apply category filter
     switch (filterBy) {
       case 'new':
@@ -116,6 +127,8 @@ const CardList = ({ deckId, onStartReview, onBack }) => {
         onBack={onBack} 
         onStartReview={onStartReview} 
         reviewCount={reviewCount}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
       />
 
       <CardControls
