@@ -106,14 +106,32 @@ const Review = ({ deckId, onFinish }) => {
         Карточка {currentCardIndex + 1} из {cardsToReview.length}
       </div>
 
-      {showBack && (
-        <div className="review-actions">
-          <button onClick={() => handleReviewAction('AGAIN')}>Повторить</button>
-          <button onClick={() => handleReviewAction('HARD')}>Трудно</button>
-          <button onClick={() => handleReviewAction('GOOD')}>Хорошо</button>
-          <button onClick={() => handleReviewAction('EASY')}>Легко</button>
-        </div>
-      )}
+      <div className="review-actions">
+        <button 
+          onClick={() => handleReviewAction('AGAIN')}
+          className="again-button"
+        >
+          Повторить
+        </button>
+        <button 
+          onClick={() => handleReviewAction('HARD')}
+          className="hard-button"
+        >
+          Трудно
+        </button>
+        <button 
+          onClick={() => handleReviewAction('GOOD')}
+          className="good-button"
+        >
+          Хорошо
+        </button>
+        <button 
+          onClick={() => handleReviewAction('EASY')}
+          className="easy-button"
+        >
+          Легко
+        </button>
+      </div>
     </div>
   );
 };
