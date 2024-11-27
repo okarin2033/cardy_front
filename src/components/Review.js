@@ -11,6 +11,8 @@ const Review = ({ deckId, onFinish }) => {
   const [showBack, setShowBack] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [error, setError] = useState('');
+  const [aiExplanation, setAiExplanation] = useState('');
+  const [isLoadingAi, setIsLoadingAi] = useState(false);
 
   useEffect(() => {
     fetchCardsForReview();
@@ -44,10 +46,10 @@ const Review = ({ deckId, onFinish }) => {
         setCurrentCardIndex(currentCardIndex + 1);
         setShowBack(false);
         setShowHint(false);
+        setAiExplanation(''); // Сбрасываем объяснение ИИ при переходе к следующей карточке
       } else {
-        // Повторение закончено
         alert('Вы завершили повторение карточек!');
-        onFinish(); // Возвращаемся на главную или куда необходимо
+        onFinish();
       }
     } catch (error) {
       console.error('Ошибка при отправке результата повторения:', error);
@@ -57,6 +59,41 @@ const Review = ({ deckId, onFinish }) => {
 
   const toggleHint = () => {
     setShowHint(!showHint);
+  };
+
+  const getAiExplanation = async () => {
+    const currentCard = cardsToReview[currentCardIndex];
+    setIsLoadingAi(true);
+    try {
+      const response = await axios.get('/api/ai/translate', {
+        params: {
+          word: currentCard.front,
+          language: 'ru'
+        }
+      });
+      
+      // Форматируем текст, заменяя маркеры на HTML
+      const formattedText = response.data
+        .split('\n')
+        .map(line => {
+          if (line.startsWith('###')) {
+            return `<h3>${line.replace('###', '').trim()}</h3>`;
+          }
+          return line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        })
+        .join('<br>');
+
+      setAiExplanation(formattedText);
+    } catch (error) {
+      console.error('Ошибка при получении объяснения от ИИ:', error);
+      setError('Не удалось получить объяснение от ИИ');
+    } finally {
+      setIsLoadingAi(false);
+    }
+  };
+
+  const closeAiExplanation = () => {
+    setAiExplanation('');
   };
 
   if (cardsToReview.length === 0) {
@@ -98,12 +135,45 @@ const Review = ({ deckId, onFinish }) => {
                       toggleHint(); 
                     }}
                   >
-                    &#10067;
+                    <i className="fas fa-lightbulb"></i>
                   </button>
                 )}
               </div>
             )}
           </div>
+
+          {showBack && (
+            <div className="review-ai-section" onClick={e => e.stopPropagation()}>
+              {!aiExplanation && (
+                <button 
+                  className="review-ai-button"
+                  onClick={getAiExplanation}
+                  disabled={isLoadingAi}
+                >
+                  {isLoadingAi ? (
+                    <i className="fas fa-spinner fa-spin"></i>
+                  ) : (
+                    <><i className="fas fa-robot"></i> Получить объяснение от ИИ</>
+                  )}
+                </button>
+              )}
+              {aiExplanation && (
+                <div className="review-ai-explanation-container">
+                  <button 
+                    className="review-ai-close-button"
+                    onClick={closeAiExplanation}
+                    title="Закрыть объяснение"
+                  >
+                    <i className="fas fa-times"></i>
+                  </button>
+                  <div 
+                    className="review-ai-explanation"
+                    dangerouslySetInnerHTML={{ __html: aiExplanation }}
+                  />
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="review-progress">

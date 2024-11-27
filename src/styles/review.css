@@ -195,3 +195,109 @@
 .review-back-button i {
   font-size: 1rem;
 }
+
+.review-ai-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+  width: 100%;
+}
+
+.review-ai-button {
+  background-color: var(--ai-button-bg);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 auto;
+  transition: all 0.3s ease;
+}
+
+.review-ai-button:hover {
+  background-color: var(--ai-button-hover-bg);
+  transform: translateY(-1px);
+}
+
+.review-ai-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.review-ai-button i {
+  font-size: 1.2rem;
+}
+
+.review-ai-explanation-container {
+  position: relative;
+  width: 100%;
+}
+
+.review-ai-close-button {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: var(--ai-button-bg);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 1;
+  padding: 0;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.review-ai-close-button:hover {
+  background-color: var(--ai-button-hover-bg);
+  transform: scale(1.1);
+}
+
+.review-ai-close-button i {
+  font-size: 0.9rem;
+}
+
+.review-ai-explanation {
+  margin-top: 15px;
+  padding: 20px;
+  background-color: var(--ai-explanation-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-color);
+}
+
+.review-ai-explanation h3 {
+  color: var(--ai-heading-color);
+  font-size: 1.3rem;
+  margin: 20px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.review-ai-explanation h3:first-child {
+  margin-top: 0;
+}
+
+.review-ai-explanation strong {
+  color: var(--ai-emphasis-color);
+  font-weight: 600;
+  padding: 0 2px;
+}
+
+.review-ai-explanation br {
+  margin-bottom: 8px;
+  display: block;
+  content: "";
+}
