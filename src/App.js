@@ -3,15 +3,16 @@ import React, { useState, useContext } from 'react';
 import DeckList from './components/DeckList';
 import CardList from './components/CardList';
 import Review from './components/Review';
-import Navbar from './components/Navbar';
 import Profile from './components/Profile';
 import './App.css';
 import { AuthContext } from './context/AuthContext';
+import { ThemeProvider, useTheme } from './context/ThemeContext';
 
-function App() {
+const AppContent = () => {
   const [currentTab, setCurrentTab] = useState('home');
   const [selectedDeckId, setSelectedDeckId] = useState(null);
   const { auth } = useContext(AuthContext);
+  const { isDarkMode, toggleTheme } = useTheme();
 
   const handleSelectDeck = (deckId) => {
     setSelectedDeckId(deckId);
@@ -24,8 +25,37 @@ function App() {
   };
 
   return (
-    <div className="app-container">
-      <Navbar currentTab={currentTab} setCurrentTab={setCurrentTab} />
+    <div className={`app-container ${isDarkMode ? 'dark-theme' : ''}`}>
+      <nav className="navbar">
+        <ul>
+          <li>
+            <button
+              className={currentTab === 'home' ? 'active' : ''}
+              onClick={() => setCurrentTab('home')}
+            >
+              Главная
+            </button>
+          </li>
+          <li>
+            <button
+              className={currentTab === 'profile' ? 'active' : ''}
+              onClick={() => setCurrentTab('profile')}
+            >
+              Профиль
+            </button>
+          </li>
+          <li className="theme-toggle">
+            <button onClick={toggleTheme}>
+              {isDarkMode ? (
+                <i className="fas fa-sun"></i>
+              ) : (
+                <i className="fas fa-moon"></i>
+              )}
+            </button>
+          </li>
+        </ul>
+      </nav>
+
       {currentTab === 'home' && auth.isAuthenticated && (
         <DeckList
           onSelectDeck={handleSelectDeck}
@@ -42,21 +72,29 @@ function App() {
       )}
       {currentTab === 'deck' && selectedDeckId !== null && (
         <div>
-          <button className="back-button" onClick={() => setCurrentTab('home')}>Назад к коллекциям</button>
-          <CardList deckId={selectedDeckId} />
-        </div>
-      )}
-      {currentTab === 'review' && selectedDeckId !== null && (
-        <div>
-          <button className="back-button" onClick={() => setCurrentTab('home')}>Назад к коллекциям</button>
-          <Review
-            deckId={selectedDeckId}
-            onFinish={() => setCurrentTab('home')}
+          <CardList 
+            deckId={selectedDeckId} 
+            onStartReview={() => setCurrentTab('review')}
+            onBack={() => setCurrentTab('home')}
           />
         </div>
       )}
+      {currentTab === 'review' && selectedDeckId !== null && (
+        <Review
+          deckId={selectedDeckId}
+          onFinish={() => setCurrentTab('deck')}
+        />
+      )}
     </div>
   );
-}
+};
+
+const App = () => {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
+  );
+};
 
 export default App;

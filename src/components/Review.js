@@ -60,7 +60,14 @@ const Review = ({ deckId, onFinish }) => {
   };
 
   if (cardsToReview.length === 0) {
-    return <div><h3>Нет карточек для повторения в этой колоде</h3></div>;
+    return (
+      <div>
+        <h3>Нет карточек для повторения в этой колоде</h3>
+        <button onClick={onFinish} className="back-to-deck">
+          <i className="fas fa-arrow-left"></i> Вернуться к колоде
+        </button>
+      </div>
+    );
   }
 
   const currentCard = cardsToReview[currentCardIndex];

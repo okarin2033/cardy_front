@@ -8,23 +8,194 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f7f7f7;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+:root {
+  --bg-color: #ffffff;
+  --text-color: #333333;
+  --nav-bg: #343a40;
+  --nav-text: #ffffff;
+  --card-bg: #ffffff;
+  --container-bg: #f8f9fa;
+  --button-bg: #487eb0;
+  --button-text: #ffffff;
+  --input-bg: #ffffff;
+  --input-text: #333333;
+  --input-border: #487eb0;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #e9ecef;
+  --bg-hover: #f1f3f5;
+  --text-primary: #333333;
+  --text-secondary: #6c757d;
+  --warning-text: #fbbf24;
+  --success-text: #34d399;
+  --button-primary: #4299e1;
+  --button-primary-hover: #3182ce;
+  --button-secondary: #6c757d;
+  --button-secondary-hover: #5a6268;
+  --button-danger: #e53e3e;
+  --button-danger-hover: #c53030;
+  --button-action: #48bb78;
+  --button-action-hover: #38a169;
+  --button-disabled: #e9ecef;
+  --deck-nav-bg: #343a40;
+  --deck-nav-button: #487eb0;
+  --deck-nav-button-hover: #3182ce;
+  --search-bg: #ffffff;
+  --card-border: #dee2e6;
+}
+
+.dark-theme {
+  --bg-color: #1a1d24;
+  --text-color: #f5f6fa;
+  --nav-bg: #20242d;
+  --nav-text: #f5f6fa;
+  --card-bg: #242832;
+  --container-bg: #1e2229;
+  --button-bg: #487eb0;
+  --button-text: #f5f6fa;
+  --input-bg: #242832;
+  --input-text: #f5f6fa;
+  --input-border: #487eb0;
+  --bg-secondary: #242832;
+  --bg-tertiary: #2d3440;
+  --bg-hover: #2f3542;
+  --text-primary: #f5f6fa;
+  --text-secondary: #dcdde1;
+  --warning-text: #fbbf24;
+  --success-text: #34d399;
+  --button-primary: #4299e1;
+  --button-primary-hover: #3182ce;
+  --button-secondary: #353b48;
+  --button-secondary-hover: #2d3440;
+  --button-danger: #e53e3e;
+  --button-danger-hover: #c53030;
+  --button-action: #48bb78;
+  --button-action-hover: #38a169;
+  --button-disabled: #353b48;
+  --deck-nav-bg: #20242d;
+  --deck-nav-button: #487eb0;
+  --deck-nav-button-hover: #3182ce;
+  --search-bg: #242832;
+  --card-border: #353b48;
+}
+
+/* Общие стили для всех input полей */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+textarea {
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  padding: 8px 12px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--deck-nav-button);
+  box-shadow: 0 0 0 2px rgba(72, 126, 176, 0.2);
+}
+
+/* Общие стили */
+.root-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app {
+  min-height: 100vh;
 }
 
 .app-container {
   max-width: 1000px;
   margin: 20px auto;
   padding: 20px;
-  background-color: #ffffff;
+  background-color: var(--container-bg);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
 }
 
+.content {
+  flex: 1;
+}
+
 /* Навигация */
+.deck-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: var(--nav-bg);
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+.deck-nav-left {
+  display: flex;
+  gap: 10px;
+}
+
+.deck-nav-right {
+  flex: 0 0 auto;
+}
+
+.deck-nav button {
+  background-color: var(--button-secondary);
+  color: var(--nav-text);
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.deck-nav button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.deck-nav button:hover:not(:disabled) {
+  background-color: var(--button-secondary-hover);
+}
+
+.deck-nav .search-input {
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border: 1px solid var(--card-border);
+  padding: 8px 12px;
+  border-radius: 4px;
+  width: 250px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.deck-nav .search-input:focus {
+  border-color: var(--input-border);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(72, 126, 176, 0.2);
+}
+
 .navbar {
-  background-color: #343a40;
+  background-color: var(--nav-bg);
+  padding: 1rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  color: var(--nav-text);
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .navbar ul {
@@ -32,32 +203,64 @@ body {
   padding: 0;
   margin: 0;
   display: flex;
-  gap: 1rem;
-  justify-content: center;
+  gap: 20px;
+  align-items: center;
+  width: 100%;
 }
 
-.navbar li {
-  /* Удаляем стандартные стили списка */
+.navbar li:not(.theme-toggle) {
+  margin-right: 20px;
 }
 
 .navbar button {
   background-color: transparent;
+  color: var(--nav-text);
   border: none;
-  color: #ffffff;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  cursor: pointer;
+  padding: 12px 24px;
   border-radius: 4px;
-  transition: background-color 0.3s, transform 0.2s;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
 }
 
-.navbar button:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-  transform: scale(1.05);
+.navbar button:hover,
+.navbar button.active {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .navbar button.active {
-  background-color: #495057;
+  border-bottom: 2px solid var(--nav-text);
+}
+
+.theme-toggle {
+  margin-left: auto;
+}
+
+.theme-toggle button {
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  font-size: 1.2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--deck-nav-button);
+}
+
+.theme-toggle button:hover {
+  background-color: var(--deck-nav-button-hover);
+}
+
+.navbar li {
+  margin-right: 10px;
+}
+
+.navbar li:last-child {
+  margin-right: 0;
+}
+
+.deck-navigation button i {
+  font-size: 0.9em;
 }
 
 /* Профиль */
@@ -65,19 +268,19 @@ body {
   max-width: 500px;
   margin: 0 auto;
   padding: 25px;
-  background-color: #ffffff;
+  background-color: var(--card-bg);
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .profile h2 {
   margin-bottom: 20px;
-  color: #343a40;
+  color: var(--text-color);
 }
 
 .profile p {
   margin: 10px 0;
-  color: #495057;
+  color: var(--text-color);
 }
 
 .profile button {
@@ -113,12 +316,12 @@ body {
 
 .profile .form-group label {
   margin-bottom: 5px;
-  color: #343a40;
+  color: var(--text-color);
 }
 
 .profile .form-group input {
   padding: 10px;
-  border: 1px solid #ced4da;
+  border: 1px solid var(--card-border);
   border-radius: 6px;
   font-size: 1rem;
 }
@@ -155,18 +358,7 @@ body {
 
 /* Кнопка "Назад" */
 .back-button {
-  background-color: #6c757d;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-bottom: 20px;
-  transition: background-color 0.3s;
-}
-
-.back-button:hover {
-  background-color: #5a6268;
+  display: none;
 }
 
 /* Сообщения об ошибках */
@@ -190,98 +382,130 @@ body {
 }
 
 .deck-actions .open-button {
-  background-color: #17a2b8;
-  color: white;
+  background-color: var(--button-action);
+  color: var(--nav-text);
 }
 
 .deck-actions .open-button:hover {
-  background-color: #138496;
+  background-color: var(--button-action-hover);
 }
 
 .deck-actions .repeat-button {
-  background-color: #ffc107;
-  color: white;
+  background-color: var(--button-secondary);
+  color: var(--nav-text);
 }
 
 .deck-actions .repeat-button:hover {
-  background-color: #e0a800;
+  background-color: var(--button-secondary-hover);
+}
+
+.deck-actions .repeat-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--button-disabled);
 }
 
 .deck-actions .delete-button {
-  background-color: #dc3545;
-  color: white;
+  background-color: var(--button-danger);
+  color: var(--nav-text);
 }
 
 .deck-actions .delete-button:hover {
-  background-color: #c82333;
+  background-color: var(--button-danger-hover);
 }
 
 /* Форма создания колоды */
+.create-deck-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  min-height: 50vh;
+}
+
 .create-deck-form {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 25px;
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: var(--card-bg);
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+}
+
+.create-deck-form h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: var(--text-color);
 }
 
 .create-deck-form .form-group {
-  margin-bottom: 20px;
-}
-
-.create-deck-form .form-group label {
-  display: block;
-  margin-bottom: 8px;
-  color: #343a40;
-}
-
-.create-deck-form .form-group input {
+  margin: 0 auto 20px;
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ced4da;
-  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+}
+
+.create-deck-form form {
+  width: 100%;
+}
+
+.deck-name-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 12px 15px;
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  background-color: var(--input-bg);
+  color: var(--input-text);
   font-size: 1rem;
+  display: block;
+  margin: 0 auto;
 }
 
 .create-deck-form .form-buttons {
   display: flex;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 25px;
 }
 
-.create-deck-form .form-buttons button {
-  flex: 1;
-  padding: 10px 0;
+.create-deck-form .create-button,
+.create-deck-form .cancel-button {
+  padding: 10px 25px;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
   font-size: 1rem;
   transition: background-color 0.3s;
+  height: 40px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.create-deck-form .form-buttons button[type="submit"] {
-  background-color: #28a745;
-  color: white;
+.create-deck-form .create-button {
+  background-color: var(--button-action);
+  color: var(--nav-text);
 }
 
-.create-deck-form .form-buttons button[type="submit"]:hover {
-  background-color: #218838;
+.create-deck-form .cancel-button {
+  background-color: var(--button-secondary);
+  color: var(--nav-text);
 }
 
-.create-deck-form .form-buttons button[type="button"] {
-  background-color: #6c757d;
-  color: white;
+.create-deck-form .create-button:hover {
+  background-color: var(--button-action-hover);
 }
 
-.create-deck-form .form-buttons button[type="button"]:hover {
-  background-color: #5a6268;
+.create-deck-form .cancel-button:hover {
+  background-color: var(--button-secondary-hover);
 }
 
 /* Кнопки создания */
 .create-button {
-  background-color: #28a745;
-  color: white;
+  background-color: var(--button-action);
+  color: var(--nav-text);
   padding: 12px 25px;
   border: none;
   border-radius: 6px;
@@ -292,7 +516,7 @@ body {
 }
 
 .create-button:hover {
-  background-color: #218838;
+  background-color: var(--button-action-hover);
 }
 
 /* Список колод */
@@ -308,27 +532,26 @@ body {
 }
 
 .deck-card {
-  background-color: #ffffff;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.3s;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  padding: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .deck-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .deck-card h3 {
   margin: 0 0 10px 0;
-  color: #343a40;
+  color: var(--text-color);
 }
 
 .deck-card p {
   margin: 5px 0;
-  color: #495057;
+  color: var(--text-color);
 }
 
 .deck-card .need-review {
@@ -348,34 +571,40 @@ body {
 }
 
 .card-form {
+  margin: 20px 0;
+  padding: 0 20px;
+}
+
+.card-form .form-row {
   display: flex;
-  gap: 15px;
-  flex-wrap: wrap;
-  margin-bottom: 25px;
+  gap: 20px;
+  align-items: center;
 }
 
 .card-form input {
   flex: 1;
-  min-width: 200px;
-  padding: 10px;
-  border: 1px solid #ced4da;
-  border-radius: 6px;
-  font-size: 1rem;
+  min-width: 150px;
+  padding: 8px 12px;
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  background-color: var(--input-bg);
+  color: var(--input-text);
 }
 
 .card-form button {
-  flex: 0 0 auto;
-  padding: 10px 20px;
-  background-color: #17a2b8;
-  color: white;
+  padding: 8px 20px;
+  background-color: var(--button-action);
+  color: var(--nav-text);
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s;
+  white-space: nowrap;
+  min-width: 100px;
 }
 
 .card-form button:hover {
-  background-color: #138496;
+  background-color: var(--button-action-hover);
 }
 
 .cards-grid {
@@ -386,9 +615,8 @@ body {
 }
 
 .card-item {
-  background-color: #ffffff;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
   padding: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s, box-shadow 0.3s;
@@ -407,12 +635,12 @@ body {
   display: block;
   font-size: 1.1rem;
   margin-bottom: 5px;
-  color: #343a40;
+  color: var(--text-color);
 }
 
 .card-content p {
   margin: 0;
-  color: #495057;
+  color: var(--text-color);
 }
 
 .card-content em {
@@ -437,8 +665,8 @@ body {
 
 /* Кнопки удаления */
 .delete-button {
-  background-color: #dc3545;
-  color: white;
+  background-color: var(--button-danger);
+  color: var(--nav-text);
   border: none;
   padding: 7px 14px;
   border-radius: 6px;
@@ -447,7 +675,7 @@ body {
 }
 
 .delete-button:hover {
-  background-color: #c82333;
+  background-color: var(--button-danger-hover);
 }
 
 /* Повторение карточек */
@@ -458,9 +686,8 @@ body {
 }
 
 .review-container .card {
-  background-color: #ffffff;
-  border: 1px solid #dee2e6;
-  border-radius: 12px;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
   padding: 40px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   cursor: pointer;
@@ -474,7 +701,7 @@ body {
 
 .review-container .card-content {
   font-size: 1.6rem;
-  color: #343a40;
+  color: var(--text-color);
 }
 
 .review-container .card-hint {
@@ -502,41 +729,41 @@ body {
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  color: white;
+  color: var(--nav-text);
   font-size: 0.95rem;
   transition: background-color 0.3s;
 }
 
 .review-actions button:nth-child(1) {
-  background-color: #ffc107;
+  background-color: var(--button-secondary);
 }
 
 .review-actions button:nth-child(1):hover {
-  background-color: #e0a800;
+  background-color: var(--button-secondary-hover);
 }
 
 .review-actions button:nth-child(2) {
-  background-color: #dc3545;
+  background-color: var(--button-danger);
 }
 
 .review-actions button:nth-child(2):hover {
-  background-color: #c82333;
+  background-color: var(--button-danger-hover);
 }
 
 .review-actions button:nth-child(3) {
-  background-color: #28a745;
+  background-color: var(--button-primary);
 }
 
 .review-actions button:nth-child(3):hover {
-  background-color: #218838;
+  background-color: var(--button-primary-hover);
 }
 
 .review-actions button:nth-child(4) {
-  background-color: #17a2b8;
+  background-color: var(--button-action);
 }
 
 .review-actions button:nth-child(4):hover {
-  background-color: #138496;
+  background-color: var(--button-action-hover);
 }
 
 .progress {
@@ -544,13 +771,171 @@ body {
   color: #6c757d;
 }
 
-/* Кнопки создания */
-button {
-  transition: background-color 0.3s, transform 0.2s;
+/* Кнопки */
+.btn,
+button[type="submit"],
+button[type="button"] {
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  color: var(--nav-text);
 }
 
-button:focus {
-  outline: none;
+.btn-primary {
+  background-color: var(--button-primary);
+}
+
+.btn-primary:hover {
+  background-color: var(--button-primary-hover);
+}
+
+.btn-secondary {
+  background-color: var(--button-secondary);
+}
+
+.btn-secondary:hover {
+  background-color: var(--button-secondary-hover);
+}
+
+.btn-danger {
+  background-color: var(--button-danger);
+}
+
+.btn-danger:hover {
+  background-color: var(--button-danger-hover);
+}
+
+/* Карточки действий */
+.card-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.card-actions button {
+  background-color: var(--button-secondary);
+  color: var(--nav-text);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.card-actions button:hover {
+  background-color: var(--button-secondary-hover);
+}
+
+.card-actions button.delete {
+  background-color: var(--button-danger);
+}
+
+.card-actions button.delete:hover {
+  background-color: var(--button-danger-hover);
+}
+
+/* Кнопки в меню карточки */
+.card-menu {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.card-menu button {
+  background-color: var(--button-secondary);
+  color: var(--nav-text);
+  border: none;
+  padding: 6px 12px;
+  margin-right: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.card-menu button:hover {
+  background-color: var(--button-secondary-hover);
+}
+
+.card-menu button.primary {
+  background-color: var(--button-primary);
+}
+
+.card-menu button.primary:hover {
+  background-color: var(--button-primary-hover);
+}
+
+/* Кнопки в форме создания */
+.form-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.form-buttons button {
+  flex: 1;
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  color: var(--nav-text);
+}
+
+.form-buttons button[type="submit"] {
+  background-color: var(--button-primary);
+}
+
+.form-buttons button[type="submit"]:hover {
+  background-color: var(--button-primary-hover);
+}
+
+.form-buttons button[type="button"] {
+  background-color: var(--button-secondary);
+}
+
+.form-buttons button[type="button"]:hover {
+  background-color: var(--button-secondary-hover);
+}
+
+/* Кнопки в режиме повторения */
+.review-actions button {
+  background-color: var(--button-secondary);
+  color: var(--nav-text);
+  border: none;
+  padding: 8px 16px;
+  margin: 0 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.review-actions button:hover {
+  background-color: var(--button-secondary-hover);
+}
+
+.need-review, .all-reviewed {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.need-review {
+  color: var(--warning-text);
+}
+
+.all-reviewed {
+  color: var(--success-text);
+}
+
+.review-icon {
+  font-size: 1.1rem;
 }
 
 /* Responsive Design */
@@ -571,11 +956,324 @@ button:focus {
 /* Приветственное сообщение */
 .welcome-message {
   text-align: center;
-  color: #495057;
+  color: var(--text-color);
   padding: 50px 20px;
 }
 
 .welcome-message h2 {
   font-size: 1.5rem;
-  color: #343a40;
+  color: var(--text-color);
+}
+
+.search-container {
+  background-color: var(--search-bg);
+  padding: 15px;
+  border-radius: 5px;
+  margin: 15px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.search-container input {
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border: 1px solid var(--input-border);
+  padding: 8px 15px;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.card-form,
+.create-deck-form {
+  background-color: var(--card-bg);
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  margin-bottom: 20px;
+}
+
+.card-form input,
+.create-deck-form input {
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border: 1px solid var(--input-border);
+}
+
+.card-form input::placeholder,
+.create-deck-form input::placeholder {
+  color: var(--input-text);
+  opacity: 0.6;
+}
+
+.deck-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+}
+
+.deck-card:hover {
+  border-color: var(--deck-nav-button);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.search-container input {
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border: 1px solid var(--input-border);
+  width: 100%;
+  padding: 10px;
+}
+
+.search-container input::placeholder {
+  color: var(--input-text);
+  opacity: 0.6;
+}
+
+.card-item button,
+.deck-card button {
+  background-color: var(--button-secondary);
+  color: var(--nav-text);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.card-item button:hover,
+.deck-card button:hover {
+  background-color: var(--button-secondary-hover);
+}
+
+.card-item .delete-button,
+.deck-card .delete-button {
+  background-color: var(--button-danger);
+}
+
+.card-item .delete-button:hover,
+.deck-card .delete-button:hover {
+  background-color: var(--button-danger-hover);
+}
+
+.card-form button[type="submit"] {
+  background-color: var(--button-action);
+  color: var(--nav-text);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.card-form button[type="submit"]:hover {
+  background-color: var(--button-action-hover);
+}
+
+.deck-actions button,
+.create-deck-button {
+  background-color: var(--button-action);
+  color: var(--nav-text);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.deck-actions button:hover,
+.create-deck-button:hover {
+  background-color: var(--button-action-hover);
+}
+
+.deck-nav button {
+  background-color: var(--button-secondary);
+  color: var(--nav-text);
+  border: none;
+  padding: 8px 15px;
+  margin-right: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.deck-nav button:hover {
+  background-color: var(--button-secondary-hover);
+}
+
+.deck-card .card-actions button {
+  background-color: var(--button-secondary);
+  color: var(--nav-text);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.deck-card .card-actions button:hover {
+  background-color: var(--button-secondary-hover);
+}
+
+.deck-card .card-actions button.review {
+  background-color: var(--button-primary);
+}
+
+.deck-card .card-actions button.review:hover {
+  background-color: var(--button-primary-hover);
+}
+
+.footer {
+  width: 100%;
+  padding: 15px 0;
+  text-align: center;
+  background-color: var(--nav-bg);
+  color: var(--text-secondary);
+  font-size: 0.9em;
+  border-top: 1px solid var(--card-border);
+  margin-top: auto;
+}
+
+.card-form {
+  background-color: var(--card-bg);
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.card-form h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: var(--text-color);
+  font-size: 1.1rem;
+}
+
+.card-form form {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.card-form input {
+  height: 31px;
+  padding: 0 10px;
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  box-sizing: border-box;
+}
+
+.card-form input[name="front"] {
+  width: 150px;
+}
+
+.card-form input[name="back"] {
+  width: 150px;
+}
+
+.card-form input[name="hint"] {
+  width: 180px;
+}
+
+.card-form button {
+  height: 31px;
+  padding: 0 8px;
+  border: 1px solid var(--button-primary);
+  border-radius: 4px;
+  font-size: 11px;
+  width: 55px;
+  cursor: pointer;
+  background-color: var(--button-primary);
+  color: var(--nav-text);
+  white-space: nowrap;
+  box-sizing: border-box;
+  line-height: 29px;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex: 0 0 55px;
+  top: -5px;
+}
+
+.card-form button:hover {
+  background-color: var(--button-primary-hover);
+  border-color: var(--button-primary-hover);
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.card-item {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.card-content {
+  margin-bottom: 15px;
+}
+
+.card-content h4 {
+  margin: 0 0 10px 0;
+  color: var(--text-color);
+  font-size: 1.1rem;
+}
+
+.card-content p {
+  margin: 5px 0;
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+.card-content .hint {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-style: italic;
+  margin-top: 8px;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.card-actions button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--nav-text);
+  transition: all 0.2s ease;
+}
+
+.card-actions button.delete {
+  background-color: var(--button-danger);
+}
+
+.card-actions button.delete:hover {
+  background-color: var(--button-danger-hover);
 }
