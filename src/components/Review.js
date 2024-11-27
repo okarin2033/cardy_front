@@ -76,6 +76,9 @@ const Review = ({ deckId, onFinish }) => {
       const formattedText = response.data
         .split('\n')
         .map(line => {
+          if (line.startsWith('##') && !line.startsWith('###')) {
+            return `<h2>${line.replace('##', '').trim()}</h2>`;
+          }
           if (line.startsWith('###')) {
             return `<h3>${line.replace('###', '').trim()}</h3>`;
           }

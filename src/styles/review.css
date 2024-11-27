@@ -278,6 +278,18 @@
   color: var(--text-color);
 }
 
+.review-ai-explanation h2 {
+  color: var(--ai-heading-color);
+  font-size: 1.5rem;
+  margin: 24px 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.review-ai-explanation h2:first-child {
+  margin-top: 0;
+}
+
 .review-ai-explanation h3 {
   color: var(--ai-heading-color);
   font-size: 1.3rem;
