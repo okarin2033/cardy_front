@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from '../axiosConfig';
 import { AuthContext } from '../context/AuthContext';
+import '../styles/review.css';
 
 const Review = ({ deckId, onFinish }) => {
   const { auth } = useContext(AuthContext);
@@ -74,63 +75,68 @@ const Review = ({ deckId, onFinish }) => {
 
   return (
     <div className="review-container">
-      <h3>Повторение карточек</h3>
-      {error && <div className="error-message">{error}</div>}
-      
-      <div className="review-card" onClick={() => setShowBack(!showBack)}>
-        <div className="card-front-back">
-          <div className="card-content">
-            {showBack ? currentCard.back : currentCard.front}
-          </div>
-          {currentCard.hint && !showBack && (
-            <div className="card-hint">
-              {showHint ? (
-                <span>{currentCard.hint}</span>
-              ) : (
-                <button 
-                  className="hint-button" 
-                  onClick={(e) => { 
-                    e.stopPropagation(); 
-                    toggleHint(); 
-                  }}
-                >
-                  ❓
-                </button>
-              )}
+      <div className="review-content">
+        <button onClick={onFinish} className="back-button">
+          <i className="fas fa-arrow-left"></i> Вернуться к колоде
+        </button>
+        <h3>Повторение карточек</h3>
+        {error && <div className="error-message">{error}</div>}
+        
+        <div className="review-card" onClick={() => setShowBack(!showBack)}>
+          <div className="card-front-back">
+            <div className="card-content">
+              {showBack ? currentCard.back : currentCard.front}
             </div>
-          )}
+            {currentCard.hint && !showBack && (
+              <div className="card-hint">
+                {showHint ? (
+                  <span>{currentCard.hint}</span>
+                ) : (
+                  <button 
+                    className="hint-button" 
+                    onClick={(e) => { 
+                      e.stopPropagation(); 
+                      toggleHint(); 
+                    }}
+                  >
+                    &#10067;
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
 
-      <div className="review-progress">
-        Карточка {currentCardIndex + 1} из {cardsToReview.length}
-      </div>
+        <div className="review-progress">
+          Карточка {currentCardIndex + 1} из {cardsToReview.length}
+        </div>
 
-      <div className="review-actions">
-        <button 
-          onClick={() => handleReviewAction('AGAIN')}
-          className="again-button"
-        >
-          Повторить
-        </button>
-        <button 
-          onClick={() => handleReviewAction('HARD')}
-          className="hard-button"
-        >
-          Трудно
-        </button>
-        <button 
-          onClick={() => handleReviewAction('GOOD')}
-          className="good-button"
-        >
-          Хорошо
-        </button>
-        <button 
-          onClick={() => handleReviewAction('EASY')}
-          className="easy-button"
-        >
-          Легко
-        </button>
+        <div className="review-actions">
+          <button 
+            onClick={() => handleReviewAction('AGAIN')}
+            className="again-button"
+          >
+            Повторить
+          </button>
+          <button 
+            onClick={() => handleReviewAction('HARD')}
+            className="hard-button"
+          >
+            Трудно
+          </button>
+          <button 
+            onClick={() => handleReviewAction('GOOD')}
+            className="good-button"
+          >
+            Хорошо
+          </button>
+          <button 
+            onClick={() => handleReviewAction('EASY')}
+            className="easy-button"
+          >
+            Легко
+          </button>
+        </div>
       </div>
     </div>
   );
