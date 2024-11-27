@@ -1,0 +1,74 @@
+/* Navigation styles */
+.navbar {
+  background-color: var(--nav-bg);
+  padding: 1rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  color: var(--nav-text);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  width: 100%;
+}
+
+.navbar li:not(.theme-toggle) {
+  margin-right: 20px;
+}
+
+.navbar button {
+  background-color: transparent;
+  color: var(--nav-text);
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.navbar button:hover,
+.navbar button.active {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.navbar button.active {
+  border-bottom: 2px solid var(--nav-text);
+}
+
+.theme-toggle {
+  margin-left: auto;
+}
+
+.theme-toggle button {
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  font-size: 1.2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--deck-nav-button);
+}
+
+.theme-toggle button:hover {
+  background-color: var(--deck-nav-button-hover);
+}
+
+.navbar li {
+  margin-right: 10px;
+}
+
+.navbar li:last-child {
+  margin-right: 0;
+}

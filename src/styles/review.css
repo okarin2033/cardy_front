@@ -1,0 +1,144 @@
+/* Review component styles */
+.review-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.review-container h3 {
+  color: var(--text-color);
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.review-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 30px;
+  margin: 20px 0;
+  width: 100%;
+  max-width: 500px;
+  min-height: 200px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.review-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-front-back {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+  position: relative;
+}
+
+.card-content {
+  font-size: 1.5rem;
+  text-align: center;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.card-hint {
+  position: absolute;
+  bottom: -20px;
+  right: 0;
+}
+
+.hint-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 5px;
+  color: var(--text-secondary);
+  transition: transform 0.2s ease;
+}
+
+.hint-button:hover {
+  transform: scale(1.1);
+}
+
+.card-hint span {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.review-progress {
+  margin: 20px 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.review-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.review-actions button {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  color: var(--button-text);
+  max-width: 150px;
+}
+
+.review-actions button:nth-child(1) {
+  background-color: var(--button-danger);
+}
+
+.review-actions button:nth-child(1):hover {
+  background-color: var(--button-danger-hover);
+}
+
+.review-actions button:nth-child(2) {
+  background-color: var(--button-secondary);
+}
+
+.review-actions button:nth-child(2):hover {
+  background-color: var(--button-secondary-hover);
+}
+
+.review-actions button:nth-child(3) {
+  background-color: var(--button-primary);
+}
+
+.review-actions button:nth-child(3):hover {
+  background-color: var(--button-primary-hover);
+}
+
+.review-actions button:nth-child(4) {
+  background-color: var(--button-action);
+}
+
+.review-actions button:nth-child(4):hover {
+  background-color: var(--button-action-hover);
+}
+
+.error-message {
+  color: var(--button-danger);
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 6px;
+  background-color: rgba(220, 53, 69, 0.1);
+}

@@ -76,22 +76,36 @@ const Review = ({ deckId, onFinish }) => {
     <div className="review-container">
       <h3>Повторение карточек</h3>
       {error && <div className="error-message">{error}</div>}
-      <div className="card" onClick={() => setShowBack(!showBack)}>
-        <div className="card-content">
-          {showBack ? currentCard.back : currentCard.front}
-        </div>
-        {currentCard.hint && !showBack && (
-          <div className="card-hint">
-            {showHint ? (
-              <span>{currentCard.hint}</span>
-            ) : (
-              <button className="hint-button" onClick={(e) => { e.stopPropagation(); toggleHint(); }}>
-                ❓
-              </button>
-            )}
+      
+      <div className="review-card" onClick={() => setShowBack(!showBack)}>
+        <div className="card-front-back">
+          <div className="card-content">
+            {showBack ? currentCard.back : currentCard.front}
           </div>
-        )}
+          {currentCard.hint && !showBack && (
+            <div className="card-hint">
+              {showHint ? (
+                <span>{currentCard.hint}</span>
+              ) : (
+                <button 
+                  className="hint-button" 
+                  onClick={(e) => { 
+                    e.stopPropagation(); 
+                    toggleHint(); 
+                  }}
+                >
+                  ❓
+                </button>
+              )}
+            </div>
+          )}
+        </div>
       </div>
+
+      <div className="review-progress">
+        Карточка {currentCardIndex + 1} из {cardsToReview.length}
+      </div>
+
       {showBack && (
         <div className="review-actions">
           <button onClick={() => handleReviewAction('AGAIN')}>Повторить</button>
@@ -100,9 +114,6 @@ const Review = ({ deckId, onFinish }) => {
           <button onClick={() => handleReviewAction('EASY')}>Легко</button>
         </div>
       )}
-      <div className="progress">
-        Карточка {currentCardIndex + 1} из {cardsToReview.length}
-      </div>
     </div>
   );
 };

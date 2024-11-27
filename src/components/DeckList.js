@@ -63,9 +63,9 @@ const DeckList = ({ onSelectDeck, onReviewDeck }) => {
             <h3>{deck.name}</h3>
             <p>Количество карточек: {deck.count}</p>
             <p className={deck.needReview > 0 ? "need-review" : "all-reviewed"}>
-              <span className="review-icon">{deck.needReview > 0 ? '🔄' : '✓'}</span>
+              {deck.needReview > 0 ? '🔄' : '✓'} 
               {deck.needReview > 0 
-                ? `${deck.needReview} нуждаются в повторении`
+                ? <span className="review-count">{deck.needReview} нуждаются в повторении</span>
                 : 'Все карточки повторены'
               }
             </p>
@@ -79,7 +79,7 @@ const DeckList = ({ onSelectDeck, onReviewDeck }) => {
                 Повторить
               </button>
               <button className="delete-button" onClick={() => handleDeleteDeck(deck.id)}>
-                Удалить
+                🗑️
               </button>
             </div>
           </div>

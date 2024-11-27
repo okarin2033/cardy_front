@@ -81,27 +81,36 @@ const CardList = ({ deckId, onStartReview, onBack }) => {
       <div className="card-form">
         <h3>Добавить карточку</h3>
         <form onSubmit={handleAddCard}>
-          <input
-            type="text"
-            name="front"
-            value={newCard.front}
-            onChange={handleInputChange}
-            placeholder="Слово"
-          />
-          <input
-            type="text"
-            name="back"
-            value={newCard.back}
-            onChange={handleInputChange}
-            placeholder="Перевод"
-          />
-          <input
-            type="text"
-            name="hint"
-            value={newCard.hint}
-            onChange={handleInputChange}
-            placeholder="Подсказка (необязательно)"
-          />
+          <div className="form-group">
+            <label>Слово</label>
+            <input
+              type="text"
+              name="front"
+              value={newCard.front}
+              onChange={handleInputChange}
+              placeholder="Введите слово"
+            />
+          </div>
+          <div className="form-group">
+            <label>Перевод</label>
+            <input
+              type="text"
+              name="back"
+              value={newCard.back}
+              onChange={handleInputChange}
+              placeholder="Введите перевод"
+            />
+          </div>
+          <div className="form-group">
+            <label>Подсказка (необязательно)</label>
+            <input
+              type="text"
+              name="hint"
+              value={newCard.hint}
+              onChange={handleInputChange}
+              placeholder="Введите подсказку"
+            />
+          </div>
           <button type="submit">Добавить</button>
         </form>
         {error && <div className="error-message">{error}</div>}
@@ -117,7 +126,7 @@ const CardList = ({ deckId, onStartReview, onBack }) => {
             </div>
             <div className="card-actions">
               <button onClick={() => handleDeleteCard(card.id)} className="delete">
-                <i className="fas fa-trash"></i>
+                🗑️
               </button>
             </div>
           </div>
