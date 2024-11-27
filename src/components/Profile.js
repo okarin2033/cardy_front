@@ -94,7 +94,7 @@ const Profile = () => {
       {error && <div className="error-message">{error}</div>}
       <form onSubmit={isLogin ? handleLogin : handleRegister}>
         <div className="form-group">
-          <label htmlFor="username">Имя пользователя:</label>
+          <label htmlFor="username">Логин</label>
           <input
             type="text"
             id="username"
@@ -105,7 +105,7 @@ const Profile = () => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="password">Пароль:</label>
+          <label htmlFor="password">Пароль</label>
           <input
             type="password"
             id="password"
@@ -117,7 +117,7 @@ const Profile = () => {
         </div>
         {!isLogin && (
           <div className="form-group">
-            <label htmlFor="name">Имя:</label>
+            <label htmlFor="name">Имя</label>
             <input
               type="text"
               id="name"

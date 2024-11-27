@@ -152,20 +152,41 @@
 
 /* Card Statistics */
 .card-statistics {
-  background-color: var(--card-background);
-  border: 1px solid var(--border-color);
+  padding: 1rem;
+  background: var(--card-bg);
   border-radius: 8px;
-  padding: 1.5rem;
-  margin-top: 2rem;
+  border: 1px solid var(--card-border);
+  margin: 1rem 0;
+}
+
+.card-statistics h3 {
+  margin-bottom: 1.5rem;
+  color: var(--text-color);
 }
 
 .statistics-section {
-  margin-top: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .statistics-section h4 {
   margin-bottom: 1rem;
   color: var(--text-color);
+}
+
+/* Стили для графиков */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: var(--border-color);
+}
+
+.recharts-text {
+  fill: var(--text-color);
+}
+
+.recharts-tooltip-wrapper {
+  background-color: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 4px;
 }
 
 /* Loading and Empty States */

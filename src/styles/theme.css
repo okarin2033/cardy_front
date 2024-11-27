@@ -7,7 +7,7 @@
   --container-bg: #f8f9fa;
   --button-bg: #487eb0;
   --button-text: #ffffff;
-  --input-bg: #ffffff;
+  --input-bg: var(--bg-color);
   --input-text: #333333;
   --input-border: #487eb0;
   --bg-secondary: #f8f9fa;
@@ -19,6 +19,7 @@
   --success-text: #34d399;
   --button-primary: #4299e1;
   --button-primary-hover: #3182ce;
+  --primary-hover: #3182ce;
   --button-secondary: #6c757d;
   --button-secondary-hover: #5a6268;
   --button-danger: #e53e3e;
@@ -34,6 +35,7 @@
   --success-color: #4caf50;
   --warning-color: #ff9800;
   --error-color: #f44336;
+  --error-bg: rgba(244, 67, 54, 0.1);
   --tooltip-background: rgba(0, 0, 0, 0.8);
   --tooltip-text: #ffffff;
   --background-color: #ffffff;
@@ -51,7 +53,7 @@
   --container-bg: #1e2229;
   --button-bg: #487eb0;
   --button-text: #f5f6fa;
-  --input-bg: #242832;
+  --input-bg: var(--bg-color);
   --input-text: #f5f6fa;
   --input-border: #487eb0;
   --bg-secondary: #242832;
@@ -63,6 +65,7 @@
   --success-text: #34d399;
   --button-primary: #4299e1;
   --button-primary-hover: #3182ce;
+  --primary-hover: #3182ce;
   --button-secondary: #353b48;
   --button-secondary-hover: #2d3440;
   --button-danger: #e53e3e;
@@ -81,6 +84,7 @@
   --border-color: #353b48;
   --primary-color: #4299e1;
   --primary-color-transparent: rgba(66, 153, 225, 0.5);
+  --error-bg: rgba(244, 67, 54, 0.1);
 }
 
 /* Стили для select в светлой и темной теме */
