@@ -31,6 +31,11 @@
   --deck-nav-button-hover: #3182ce;
   --search-bg: #ffffff;
   --card-border: #dee2e6;
+  --success-color: #4caf50;
+  --warning-color: #ff9800;
+  --error-color: #f44336;
+  --tooltip-background: rgba(0, 0, 0, 0.8);
+  --tooltip-text: #ffffff;
 }
 
 .dark-theme {
@@ -66,4 +71,6 @@
   --deck-nav-button-hover: #3182ce;
   --search-bg: #242832;
   --card-border: #353b48;
+  --tooltip-background: rgba(255, 255, 255, 0.9);
+  --tooltip-text: #000000;
 }
