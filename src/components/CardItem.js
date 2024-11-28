@@ -2,7 +2,7 @@ import React from 'react';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
 
-const CardItem = ({ card, onDelete }) => {
+const CardItem = ({ card, onDelete, isSelected, onSelect }) => {
   const getDifficultyColor = (difficulty) => {
     if (difficulty < 0.6) return 'var(--success-color)';
     if (difficulty <= 2.5) return 'var(--warning-color)';
@@ -84,7 +84,16 @@ const CardItem = ({ card, onDelete }) => {
   };
 
   return (
-    <div className={`card-item ${card.isNew ? 'new-card' : ''}`}>
+    <div className={`card-item ${card.isNew ? 'new-card' : ''} ${isSelected ? 'selected' : ''}`}>
+      <div className="card-select">
+        <input
+          type="checkbox"
+          checked={isSelected}
+          onChange={() => onSelect(card.cardId)}
+          className="card-checkbox"
+        />
+      </div>
+
       <div className="card-actions">
         <button 
           onClick={() => onDelete(card.cardId)}

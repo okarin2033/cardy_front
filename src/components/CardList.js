@@ -16,6 +16,7 @@ const CardList = ({ deckId, onStartReview, onBack }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [reviewCount, setReviewCount] = useState(0);
+  const [selectedCards, setSelectedCards] = useState(new Set());
 
   const fetchCards = async () => {
     setIsLoading(true);
@@ -65,10 +66,37 @@ const CardList = ({ deckId, onStartReview, onBack }) => {
   const handleDeleteCard = async (cardId) => {
     try {
       await axios.delete(`/cards/${cardId}`);
+      setSelectedCards(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(cardId);
+        return newSet;
+      });
       fetchCards();
     } catch (error) {
       console.error('Ошибка при удалении карточки:', error);
       setError('Ошибка при удалении карточки');
+    }
+  };
+
+  const handleSelectCard = (cardId) => {
+    setSelectedCards(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(cardId)) {
+        newSet.delete(cardId);
+      } else {
+        newSet.add(cardId);
+      }
+      return newSet;
+    });
+  };
+
+  const handleSelectAll = () => {
+    if (selectedCards.size === filteredCards.length) {
+      // Если все карточки выбраны, снимаем выделение
+      setSelectedCards(new Set());
+    } else {
+      // Иначе выбираем все карточки
+      setSelectedCards(new Set(filteredCards.map(card => card.cardId)));
     }
   };
 
@@ -135,8 +163,24 @@ const CardList = ({ deckId, onStartReview, onBack }) => {
         sortBy={sortBy}
         filterBy={filterBy}
         onSortChange={setSortBy}
-        onFilterChange={setFilterBy}
+        onFilterChange={(newFilter) => {
+          setFilterBy(newFilter);
+          setSelectedCards(new Set()); // Сбрасываем выбор при изменении фильтра
+        }}
       />
+
+      {filteredCards.length > 0 && (
+        <div className="card-selection-controls">
+          <label className="select-all-container">
+            <input
+              type="checkbox"
+              checked={selectedCards.size === filteredCards.length && filteredCards.length > 0}
+              onChange={handleSelectAll}
+            />
+            Выбрать все ({selectedCards.size} из {filteredCards.length})
+          </label>
+        </div>
+      )}
 
       <div className="card-form">
         <h3>Добавить карточку</h3>
@@ -187,7 +231,7 @@ const CardList = ({ deckId, onStartReview, onBack }) => {
               <div className="no-cards">
                 {filterBy !== 'all' 
                   ? 'Нет карточек, соответствующих фильтрам' 
-                  : 'В этой колоде пока нет карточек'}
+                  : 'Карточки не найдены'}
               </div>
             ) : (
               filteredCards.map(card => (
@@ -195,6 +239,8 @@ const CardList = ({ deckId, onStartReview, onBack }) => {
                   key={card.cardId}
                   card={card}
                   onDelete={handleDeleteCard}
+                  isSelected={selectedCards.has(card.cardId)}
+                  onSelect={() => handleSelectCard(card.cardId)}
                 />
               ))
             )}
