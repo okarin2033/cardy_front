@@ -122,7 +122,10 @@
 
 .next-review.overdue {
   color: var(--error-color);
-  font-weight: 500;
+}
+
+.next-review.new-text {
+  color: var(--success-color);
 }
 
 .card-actions {
@@ -301,6 +304,15 @@
   margin-bottom: 2rem;
   width: 100%;
   box-sizing: border-box;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+}
+
+.card-form.show {
+  max-height: 500px;
+  opacity: 1;
 }
 
 .card-form h3 {
@@ -366,6 +378,28 @@
   color: var(--error-color);
   margin-top: 8px;
   font-size: 14px;
+}
+
+.add-card-button {
+  position: relative;
+  padding-right: 2.5rem !important;
+}
+
+.add-card-button::after {
+  content: '';
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-75%) rotate(45deg);
+  transition: transform 0.2s;
+}
+
+.add-card-button.active::after {
+  transform: translateY(-25%) rotate(-135deg);
 }
 
 /* Tooltips */

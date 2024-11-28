@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DeckNavigation = ({ onBack, onStartReview, reviewCount, searchQuery, onSearchChange }) => {
+const DeckNavigation = ({ onBack, onStartReview, reviewCount, searchQuery, onSearchChange, showAddCard, onToggleAddCard }) => {
   return (
     <div className="deck-nav">
       <div className="deck-nav-left">
@@ -10,6 +10,12 @@ const DeckNavigation = ({ onBack, onStartReview, reviewCount, searchQuery, onSea
           disabled={reviewCount === 0}
         >
           Начать повторение {reviewCount > 0 && `(${reviewCount})`}
+        </button>
+        <button 
+          onClick={onToggleAddCard}
+          className={`add-card-button ${showAddCard ? 'active' : ''}`}
+        >
+          Добавить карточку
         </button>
       </div>
       <div className="deck-nav-right">

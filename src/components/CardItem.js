@@ -1,15 +1,23 @@
 import React from 'react';
 import { Tooltip } from 'react-tooltip';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBrain, faChartLine } from '@fortawesome/free-solid-svg-icons';
 import 'react-tooltip/dist/react-tooltip.css';
 
-const CardItem = ({ card, onDelete, isSelected, onSelect }) => {
-  const getDifficultyColor = (difficulty) => {
+const CardItem = ({ card, onDelete, selected, onSelect }) => {
+  const getDifficultyColor = (difficulty, isNew) => {
+    if (isNew) return 'var(--text-color-light)';
     if (difficulty < 0.6) return 'var(--success-color)';
     if (difficulty <= 2.5) return 'var(--warning-color)';
     return 'var(--error-color)';
   };
 
-  const formatNextReview = (nextReview) => {
+  const formatNextReview = (nextReview, isNew) => {
+    // Если это новая карточка
+    if (isNew) {
+      return { text: 'Изучите это слово!', isNew: true };
+    }
+
     const reviewDate = new Date(nextReview);
     const now = new Date();
     const diffTime = reviewDate - now;
@@ -84,11 +92,11 @@ const CardItem = ({ card, onDelete, isSelected, onSelect }) => {
   };
 
   return (
-    <div className={`card-item ${card.isNew ? 'new-card' : ''} ${isSelected ? 'selected' : ''}`}>
+    <div className={`card-item ${card.new ? 'new-card' : ''} ${selected ? 'selected' : ''}`}>
       <div className="card-select">
         <input
           type="checkbox"
-          checked={isSelected}
+          checked={selected}
           onChange={() => onSelect(card.cardId)}
           className="card-checkbox"
         />
@@ -114,33 +122,50 @@ const CardItem = ({ card, onDelete, isSelected, onSelect }) => {
         <div className="card-progress">
           <div 
             className="difficulty-indicator"
-            style={{ backgroundColor: getDifficultyColor(card.difficulty) }}
+            style={{ backgroundColor: getDifficultyColor(card.difficulty, card.new) }}
             data-tooltip-id="tooltip"
             data-tooltip-content={`Сложность: ${getDifficultyText(card.difficulty)} (${card.difficulty.toFixed(1)} из 10)`}
           />
 
           <div className="progress-info">
             <span 
-              className={`next-review ${formatNextReview(card.nextReview).isOverdue ? 'overdue' : ''}`}
+              className={`next-review ${formatNextReview(card.nextReview, card.new).isOverdue ? 'overdue' : ''} ${card.new ? 'new-text' : ''}`}
               data-tooltip-id="tooltip"
-              data-tooltip-content={`Следующее повторение: ${new Date(card.nextReview).toLocaleString('ru-RU', {
+              data-tooltip-content={`${card.new ? 'Новая карточка' : `Следующее повторение: ${new Date(card.nextReview).toLocaleString('ru-RU', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
                 hour: '2-digit',
                 minute: '2-digit'
-              })}`}
+              })}`}`}
             >
-              {formatNextReview(card.nextReview).text}
+              {formatNextReview(card.nextReview, card.new).text}
             </span>
 
             <span 
-              className="stability"
+              className="difficulty"
               data-tooltip-id="tooltip"
-              data-tooltip-content={`Стабильность знания: ${card.stability.toFixed(1)} дней`}
+              data-tooltip-content={`Сложность: ${getDifficultyText(card.difficulty)} (${card.difficulty.toFixed(1)} из 10)`}
             >
-              {formatStability(card.stability)}
+              <FontAwesomeIcon 
+                icon={faBrain} 
+                style={{ color: getDifficultyColor(card.difficulty, card.new) }} 
+              />
             </span>
+
+            {!card.new && (
+              <span 
+                className="stability"
+                data-tooltip-id="tooltip"
+                data-tooltip-content={`Стабильность: ${card.stability.toFixed(1)}`}
+              >
+                <FontAwesomeIcon 
+                  icon={faChartLine} 
+                  style={{ color: 'var(--text-color)' }} 
+                />
+                {card.stability.toFixed(1)}
+              </span>
+            )}
           </div>
         </div>
       </div>

@@ -17,6 +17,7 @@ const CardList = ({ deckId, onStartReview, onBack }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [reviewCount, setReviewCount] = useState(0);
   const [selectedCards, setSelectedCards] = useState(new Set());
+  const [showAddCard, setShowAddCard] = useState(false);
 
   const fetchCards = async () => {
     setIsLoading(true);
@@ -116,31 +117,53 @@ const CardList = ({ deckId, onStartReview, onBack }) => {
     // Apply category filter
     switch (filterBy) {
       case 'new':
-        filtered = filtered.filter(card => card.isNew);
+        filtered = filtered.filter(card => card.new === true);
         break;
       case 'review':
         filtered = filtered.filter(card => new Date(card.nextReview) <= new Date());
         break;
       case 'easy':
-        filtered = filtered.filter(card => card.difficulty < 0.3);
+        filtered = filtered.filter(card => card.difficulty < 0.6);
         break;
       case 'medium':
-        filtered = filtered.filter(card => card.difficulty >= 0.3 && card.difficulty < 0.7);
+        filtered = filtered.filter(card => card.difficulty >= 0.6 && card.difficulty <= 2.5);
         break;
       case 'hard':
-        filtered = filtered.filter(card => card.difficulty >= 0.7);
+        filtered = filtered.filter(card => card.difficulty > 2.5);
         break;
       default:
         break;
     }
 
-    // Apply sorting
+    // Apply custom sorting
     if (sortBy) {
       filtered.sort((a, b) => {
         if (sortBy === 'nextReview') {
           return new Date(a[sortBy]) - new Date(b[sortBy]);
         }
         return a[sortBy] - b[sortBy];
+      });
+    } else {
+      // Default sorting: new -> needs review -> by next review date
+      filtered.sort((a, b) => {
+        // Сначала новые карточки
+        if (a.new !== b.new) {
+          return b.new ? 1 : -1;
+        }
+        
+        const now = new Date();
+        const aReviewDate = new Date(a.nextReview);
+        const bReviewDate = new Date(b.nextReview);
+        const aNeedsReview = aReviewDate <= now;
+        const bNeedsReview = bReviewDate <= now;
+
+        // Потом карточки, требующие повторения
+        if (aNeedsReview !== bNeedsReview) {
+          return bNeedsReview ? 1 : -1;
+        }
+
+        // Наконец, сортировка по времени следующего повторения
+        return aReviewDate - bReviewDate;
       });
     }
 
@@ -157,6 +180,8 @@ const CardList = ({ deckId, onStartReview, onBack }) => {
         reviewCount={reviewCount}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
+        showAddCard={showAddCard}
+        onToggleAddCard={() => setShowAddCard(!showAddCard)}
       />
 
       <CardControls
@@ -165,7 +190,7 @@ const CardList = ({ deckId, onStartReview, onBack }) => {
         onSortChange={setSortBy}
         onFilterChange={(newFilter) => {
           setFilterBy(newFilter);
-          setSelectedCards(new Set()); // Сбрасываем выбор при изменении фильтра
+          setSelectedCards(new Set());
         }}
       />
 
@@ -182,71 +207,65 @@ const CardList = ({ deckId, onStartReview, onBack }) => {
         </div>
       )}
 
-      <div className="card-form">
-        <h3>Добавить карточку</h3>
-        <form onSubmit={handleAddCard} className="card-form-content">
-          <div className="form-group">
-            <label>Слово</label>
-            <input
-              type="text"
-              name="front"
-              value={newCard.front}
-              onChange={handleInputChange}
-              placeholder="Введите слово"
-            />
-          </div>
-          <div className="form-group">
-            <label>Перевод</label>
-            <input
-              type="text"
-              name="back"
-              value={newCard.back}
-              onChange={handleInputChange}
-              placeholder="Введите перевод"
-            />
-          </div>
-          <div className="form-group">
-            <label>Подсказка (необязательно)</label>
-            <input
-              type="text"
-              name="hint"
-              value={newCard.hint}
-              onChange={handleInputChange}
-              placeholder="Введите подсказку"
-            />
-          </div>
-          <div className="form-group">
-            <button type="submit">Добавить</button>
-          </div>
-          {error && <div className="error">{error}</div>}
-        </form>
-      </div>
-
-      {isLoading ? (
-        <div className="loading">Загрузка карточек...</div>
-      ) : (
-        <>
-          <div className="cards-container">
-            {filteredCards.length === 0 ? (
-              <div className="no-cards">
-                {filterBy !== 'all' 
-                  ? 'Нет карточек, соответствующих фильтрам' 
-                  : 'Карточки не найдены'}
-              </div>
-            ) : (
-              filteredCards.map(card => (
-                <CardItem
-                  key={card.cardId}
-                  card={card}
-                  onDelete={handleDeleteCard}
-                  isSelected={selectedCards.has(card.cardId)}
-                  onSelect={() => handleSelectCard(card.cardId)}
-                />
-              ))
-            )}
-          </div>
-        </>
+      {showAddCard && (
+        <div className={`card-form ${showAddCard ? 'show' : ''}`}>
+          <h3>Добавить карточку</h3>
+          <form onSubmit={handleAddCard} className="card-form-content">
+            <div className="form-group">
+              <label>Слово</label>
+              <input
+                type="text"
+                name="front"
+                value={newCard.front}
+                onChange={handleInputChange}
+                placeholder="Введите слово"
+              />
+            </div>
+            <div className="form-group">
+              <label>Перевод</label>
+              <input
+                type="text"
+                name="back"
+                value={newCard.back}
+                onChange={handleInputChange}
+                placeholder="Введите перевод"
+              />
+            </div>
+            <div className="form-group">
+              <label>Подсказка (необязательно)</label>
+              <input
+                type="text"
+                name="hint"
+                value={newCard.hint}
+                onChange={handleInputChange}
+                placeholder="Введите подсказку"
+              />
+            </div>
+            <div className="form-group">
+              <button type="submit">Добавить</button>
+            </div>
+            {error && <div className="error">{error}</div>}
+          </form>
+        </div>
       )}
+
+      <div className="cards-container">
+        {isLoading ? (
+          <div className="loading">Загрузка карточек...</div>
+        ) : filteredCards.length > 0 ? (
+          filteredCards.map(card => (
+            <CardItem
+              key={card.cardId}
+              card={card}
+              onDelete={() => handleDeleteCard(card.cardId)}
+              selected={selectedCards.has(card.cardId)}
+              onSelect={() => handleSelectCard(card.cardId)}
+            />
+          ))
+        ) : (
+          <div className="no-cards">Карточки не найдены</div>
+        )}
+      </div>
     </div>
   );
 };
