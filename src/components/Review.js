@@ -14,12 +14,16 @@ const Review = ({ deckId, isLearningMode, onFinish }) => {
   const [isLoadingAi, setIsLoadingAi] = useState(false);
   const [showDictionary, setShowDictionary] = useState(false);
   const [isJapaneseDeck, setIsJapaneseDeck] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasData, setHasData] = useState(false);
 
   useEffect(() => {
     fetchCards();
   }, [deckId, isLearningMode]);
 
   const fetchCards = async () => {
+    setIsLoading(true);
+    setHasData(false);
     try {
       const mode = isLearningMode ? 'mixed' : 'review_only';
       const response = await axios.get(`review/cards/study/${deckId}`, {
@@ -28,7 +32,8 @@ const Review = ({ deckId, isLearningMode, onFinish }) => {
 
       if (response.data.length > 0) {
         setCardsToReview(response.data);
-        setShowBack(isLearningMode); // В режиме изучения сразу показываем ответ
+        setShowBack(isLearningMode);
+        setHasData(true);
       } else {
         onFinish();
       }
@@ -36,6 +41,8 @@ const Review = ({ deckId, isLearningMode, onFinish }) => {
     } catch (error) {
       console.error('Error fetching cards:', error);
       setError('Ошибка при получении карточек');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -147,13 +154,28 @@ const Review = ({ deckId, isLearningMode, onFinish }) => {
     }
   };
 
-  if (cardsToReview.length === 0) {
+  if (isLoading) {
     return (
-      <div>
+      <div className="review-container">
+        <div className="review-header">
+          <button onClick={onFinish} className="review-back-button">
+            <i className="fas fa-arrow-left"></i> Вернуться к колоде
+          </button>
+        </div>
+        <div>Загрузка карточек...</div>
+      </div>
+    );
+  }
+
+  if (!hasData && !isLoading) {
+    return (
+      <div className="review-container">
+        <div className="review-header">
+          <button onClick={onFinish} className="review-back-button">
+            <i className="fas fa-arrow-left"></i> Вернуться к колоде
+          </button>
+        </div>
         <h3>Нет карточек для {isLearningMode ? 'изучения' : 'повторения'} в этой колоде</h3>
-        <button onClick={onFinish} className="review-back-button">
-          <i className="fas fa-arrow-left"></i> Вернуться к колоде
-        </button>
       </div>
     );
   }
