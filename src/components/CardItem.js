@@ -15,7 +15,7 @@ const CardItem = ({ card, onDelete, selected, onSelect }) => {
   const formatNextReview = (nextReview, isNew) => {
     // Если это новая карточка
     if (isNew) {
-      return { text: 'Изучите это слово!', isNew: true };
+      return { text: 'Новая', isNew: true };
     }
 
     const reviewDate = new Date(nextReview);
@@ -23,41 +23,25 @@ const CardItem = ({ card, onDelete, selected, onSelect }) => {
     const diffTime = reviewDate - now;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     const diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
-    const diffMonths = Math.floor(diffDays / 30);
     
     // Если дата в прошлом
     if (diffTime < 0) {
       return { text: 'На повторение', isOverdue: true };
     }
 
-    // В пределах 2 дней - показываем часы
-    if (diffDays <= 2) {
-      if (diffHours === 0) {
-        return { text: 'Менее часа', isOverdue: false };
-      } else if (diffHours === 1) {
-        return { text: 'Через час', isOverdue: false };
-      } else {
-        const hours = diffHours % 24;
-        const days = Math.floor(diffHours / 24);
-        
-        if (days === 0) {
-          return { text: `Через ${hours} ${formatHours(hours)}`, isOverdue: false };
-        } else {
-          return { 
-            text: `Через ${days} ${formatDays(days)} ${hours} ${formatHours(hours)}`,
-            isOverdue: false 
-          };
-        }
-      }
+    // Если больше 1 дня, показываем только дни
+    if (diffDays > 1) {
+      return { text: `Через ${diffDays} ${formatDays(diffDays)}`, isOverdue: false };
     }
-    
-    // Более 2 месяцев - показываем в месяцах
-    if (diffMonths >= 2) {
-      return { text: `Через ${diffMonths} ${formatMonths(diffMonths)}`, isOverdue: false };
+
+    // В пределах суток - показываем часы
+    if (diffHours === 0) {
+      return { text: 'Менее часа', isOverdue: false };
+    } else if (diffHours === 1) {
+      return { text: 'Через час', isOverdue: false };
+    } else {
+      return { text: `Через ${diffHours} ${formatHours(diffHours)}`, isOverdue: false };
     }
-    
-    // Иначе показываем в днях
-    return { text: `Через ${diffDays} ${formatDays(diffDays)}`, isOverdue: false };
   };
 
   const formatHours = (hours) => {
@@ -120,13 +104,6 @@ const CardItem = ({ card, onDelete, selected, onSelect }) => {
         </div>
 
         <div className="card-progress">
-          <div 
-            className="difficulty-indicator"
-            style={{ backgroundColor: getDifficultyColor(card.difficulty, card.new) }}
-            data-tooltip-id="tooltip"
-            data-tooltip-content={`Сложность: ${getDifficultyText(card.difficulty)} (${card.difficulty.toFixed(1)} из 10)`}
-          />
-
           <div className="progress-info">
             <span 
               className={`next-review ${formatNextReview(card.nextReview, card.new).isOverdue ? 'overdue' : ''} ${card.new ? 'new-text' : ''}`}

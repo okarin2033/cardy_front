@@ -89,18 +89,9 @@
 .card-progress {
   display: flex;
   align-items: center;
-  gap: 1rem;
   padding-top: 1rem;
   border-top: 1px solid var(--border-color);
   margin-top: auto;
-}
-
-.difficulty-indicator {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  cursor: help;
-  flex-shrink: 0;
 }
 
 .progress-info {
@@ -109,6 +100,7 @@
   justify-content: space-between;
   align-items: center;
   font-size: 0.85em;
+  gap: 0.5rem;
 }
 
 .next-review,
@@ -118,6 +110,13 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
+}
+
+.next-review {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
 }
 
 .next-review.overdue {
