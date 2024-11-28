@@ -251,6 +251,11 @@
 .review-ai-explanation-container {
   position: relative;
   width: 100%;
+  margin-top: 16px;
+  padding: 16px;
+  background-color: var(--ai-explanation-bg);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
 }
 
 .review-ai-close-button {
