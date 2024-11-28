@@ -13,6 +13,19 @@ const Review = ({ deckId, onFinish }) => {
   const [error, setError] = useState('');
   const [aiExplanation, setAiExplanation] = useState('');
   const [isLoadingAi, setIsLoadingAi] = useState(false);
+  const [showDictionary, setShowDictionary] = useState(false);
+
+  // TODO: В будущем добавить поле language в модель колоды
+  // и использовать его для определения, какой словарь показывать
+  const isJapaneseDeck = true; // Временное решение, заменить на проверку языка колоды
+  
+  const getDictionaryUrl = (word) => {
+    if (isJapaneseDeck) {
+      return `https://jisho.org/search/${encodeURIComponent(word)}`;
+    }
+    // TODO: Добавить другие словари для разных языков
+    return ''; // Временно возвращаем пустую строку для других языков
+  };
 
   useEffect(() => {
     fetchCardsForReview();
@@ -62,6 +75,7 @@ const Review = ({ deckId, onFinish }) => {
   };
 
   const getAiExplanation = async () => {
+    setShowDictionary(false); // Закрываем словарь при запросе объяснения ИИ
     const currentCard = cardsToReview[currentCardIndex];
     setIsLoadingAi(true);
     try {
@@ -97,6 +111,15 @@ const Review = ({ deckId, onFinish }) => {
 
   const closeAiExplanation = () => {
     setAiExplanation('');
+  };
+
+  const closeDictionary = () => {
+    setShowDictionary(false);
+  };
+
+  const openDictionary = () => {
+    setAiExplanation(''); // Закрываем объяснение ИИ при открытии словаря
+    setShowDictionary(true);
   };
 
   if (cardsToReview.length === 0) {
@@ -147,18 +170,28 @@ const Review = ({ deckId, onFinish }) => {
 
           {showBack && (
             <div className="review-ai-section" onClick={e => e.stopPropagation()}>
-              {!aiExplanation && (
-                <button 
-                  className="review-ai-button"
-                  onClick={getAiExplanation}
-                  disabled={isLoadingAi}
-                >
-                  {isLoadingAi ? (
-                    <i className="fas fa-spinner fa-spin"></i>
-                  ) : (
-                    <><i className="fas fa-robot"></i> Получить объяснение от ИИ</>
+              {!aiExplanation && !showDictionary && (
+                <>
+                  <button 
+                    className="review-ai-button"
+                    onClick={getAiExplanation}
+                    disabled={isLoadingAi}
+                  >
+                    {isLoadingAi ? (
+                      <i className="fas fa-spinner fa-spin"></i>
+                    ) : (
+                      <><i className="fas fa-robot"></i> Получить объяснение от ИИ</>
+                    )}
+                  </button>
+                  {isJapaneseDeck && (
+                    <button 
+                      className="review-dictionary-button"
+                      onClick={openDictionary}
+                    >
+                      <i className="fas fa-book"></i> Открыть словарь
+                    </button>
                   )}
-                </button>
+                </>
               )}
               {aiExplanation && (
                 <div className="review-ai-explanation-container">
@@ -173,6 +206,24 @@ const Review = ({ deckId, onFinish }) => {
                     className="review-ai-explanation"
                     dangerouslySetInnerHTML={{ __html: aiExplanation }}
                   />
+                </div>
+              )}
+              {showDictionary && (
+                <div className="review-dictionary-container">
+                  <button 
+                    className="review-dictionary-close-button"
+                    onClick={closeDictionary}
+                    title="Закрыть словарь"
+                  >
+                    <i className="fas fa-times"></i>
+                  </button>
+                  <div className="review-dictionary-content">
+                    <iframe
+                      src={getDictionaryUrl(currentCard.front)}
+                      className="review-dictionary-frame"
+                      title="Dictionary"
+                    />
+                  </div>
                 </div>
               )}
             </div>

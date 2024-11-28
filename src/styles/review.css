@@ -313,3 +313,78 @@
   display: block;
   content: "";
 }
+
+/* Dictionary styles */
+.review-dictionary-button {
+  background-color: var(--ai-button-bg);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 12px 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px auto 0;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+  width: fit-content;
+}
+
+.review-dictionary-button i {
+  font-size: 1.2em;
+}
+
+.review-dictionary-container {
+  position: relative;
+  margin-top: 16px;
+  padding: 16px;
+  background-color: var(--ai-explanation-bg);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.review-dictionary-close-button {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: var(--ai-button-bg);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 1;
+  padding: 0;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.review-dictionary-close-button:hover {
+  background-color: var(--ai-button-hover-bg);
+  transform: scale(1.1);
+}
+
+.review-dictionary-close-button i {
+  font-size: 0.9rem;
+}
+
+.review-dictionary-content {
+  width: 100%;
+  height: 500px;
+  border: none;
+  border-radius: 4px;
+  margin-top: 8px;
+}
+
+.review-dictionary-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 4px;
+}
