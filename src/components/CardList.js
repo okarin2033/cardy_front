@@ -7,7 +7,7 @@ import CardItem from './CardItem.js';
 import { SORT_OPTIONS, FILTER_OPTIONS } from '../types/cards.js';
 import '../styles/card.css';
 
-const CardList = ({ deckId, onStartReview, onBack }) => {
+const CardList = ({ deckId, onStartReview, onStartLearning, onBack }) => {
   const [cards, setCards] = useState([]);
   const [newCard, setNewCard] = useState({ front: '', back: '', hint: '' });
   const [error, setError] = useState('');
@@ -16,16 +16,31 @@ const CardList = ({ deckId, onStartReview, onBack }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [reviewCount, setReviewCount] = useState(0);
+  const [newCardsCount, setNewCardsCount] = useState(0);
   const [selectedCards, setSelectedCards] = useState(new Set());
   const [showAddCard, setShowAddCard] = useState(false);
+
+  const fetchReviewCount = async () => {
+    try {
+      const response = await axios.get(`cards/deck/${deckId}/review-count`);
+      setReviewCount(response.data.count);
+    } catch (error) {
+      console.error('Error fetching review count:', error);
+    }
+  };
 
   const fetchCards = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`/cards/deck/${deckId}/user`);
+      const response = await axios.get(`cards/deck/${deckId}/user`);
       setCards(response.data);
-      const reviewResponse = await axios.get(`/cards/deck/${deckId}/review-count`);
-      setReviewCount(reviewResponse.data.count);
+      
+      // Подсчитываем количество новых карточек
+      const newCount = response.data.filter(card => card.new).length;
+      setNewCardsCount(newCount);
+      
+      // Получаем актуальное количество карточек для повторения
+      await fetchReviewCount();
     } catch (error) {
       console.error('Ошибка при получении карточек:', error);
       setError('Ошибка при получении карточек');
@@ -51,7 +66,7 @@ const CardList = ({ deckId, onStartReview, onBack }) => {
     }
 
     try {
-      await axios.post('/cards', {
+      await axios.post('cards', {
         ...newCard,
         deckId: deckId
       });
@@ -66,7 +81,7 @@ const CardList = ({ deckId, onStartReview, onBack }) => {
 
   const handleDeleteCard = async (cardId) => {
     try {
-      await axios.delete(`/cards/${cardId}`);
+      await axios.delete(`cards/${cardId}`);
       setSelectedCards(prev => {
         const newSet = new Set(prev);
         newSet.delete(cardId);
@@ -176,8 +191,10 @@ const CardList = ({ deckId, onStartReview, onBack }) => {
     <div className="card-list">
       <DeckNavigation 
         onBack={onBack} 
-        onStartReview={onStartReview} 
+        onStartReview={onStartReview}
+        onStartLearning={onStartLearning}
         reviewCount={reviewCount}
+        newCardsCount={newCardsCount}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         showAddCard={showAddCard}

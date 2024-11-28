@@ -10,3 +10,32 @@
 .back-button {
   display: none;
 }
+
+.deck-status {
+  margin: 10px 0;
+}
+
+.deck-status p {
+  margin: 5px 0;
+}
+
+.new-cards {
+  color: #4CAF50;
+  font-weight: 500;
+}
+
+.learn-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin: 0 5px;
+  transition: background-color 0.3s;
+}
+
+.learn-button:hover {
+  background-color: #45a049;
+}

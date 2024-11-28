@@ -11,6 +11,7 @@ import { ThemeProvider, useTheme } from './context/ThemeContext';
 const AppContent = () => {
   const [currentTab, setCurrentTab] = useState('home');
   const [selectedDeckId, setSelectedDeckId] = useState(null);
+  const [isLearningMode, setIsLearningMode] = useState(false);
   const { auth } = useContext(AuthContext);
   const { isDarkMode, toggleTheme } = useTheme();
 
@@ -21,6 +22,13 @@ const AppContent = () => {
 
   const handleReviewDeck = (deckId) => {
     setSelectedDeckId(deckId);
+    setIsLearningMode(false);
+    setCurrentTab('review');
+  };
+
+  const handleLearnDeck = (deckId) => {
+    setSelectedDeckId(deckId);
+    setIsLearningMode(true);
     setCurrentTab('review');
   };
 
@@ -60,6 +68,7 @@ const AppContent = () => {
         <DeckList
           onSelectDeck={handleSelectDeck}
           onReviewDeck={handleReviewDeck}
+          onLearnDeck={handleLearnDeck}
         />
       )}
       {currentTab === 'home' && !auth.isAuthenticated && (
@@ -74,7 +83,8 @@ const AppContent = () => {
         <div>
           <CardList 
             deckId={selectedDeckId} 
-            onStartReview={() => setCurrentTab('review')}
+            onStartReview={() => handleReviewDeck(selectedDeckId)}
+            onStartLearning={() => handleLearnDeck(selectedDeckId)}
             onBack={() => setCurrentTab('home')}
           />
         </div>
@@ -82,6 +92,7 @@ const AppContent = () => {
       {currentTab === 'review' && selectedDeckId !== null && (
         <Review
           deckId={selectedDeckId}
+          isLearningMode={isLearningMode}
           onFinish={() => setCurrentTab('deck')}
         />
       )}

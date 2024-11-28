@@ -1,16 +1,12 @@
-// src/components/Review.js
 import React, { useState, useEffect, useContext } from 'react';
 import axios from '../axiosConfig';
 import { AuthContext } from '../context/AuthContext';
 import '../styles/review.css';
 
-const Review = ({ deckId, onFinish }) => {
+const Review = ({ deckId, isLearningMode, onFinish }) => {
   const { auth } = useContext(AuthContext);
   const [cardsToReview, setCardsToReview] = useState([]);
-  const [newCards, setNewCards] = useState([]);
-  const [reviewCards, setReviewCards] = useState([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
-  const [isLearningMode, setIsLearningMode] = useState(true);
   const [showBack, setShowBack] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [error, setError] = useState('');
@@ -20,93 +16,52 @@ const Review = ({ deckId, onFinish }) => {
   const [isJapaneseDeck, setIsJapaneseDeck] = useState(true);
 
   useEffect(() => {
-    fetchCardsForReview();
-  }, [deckId]);
+    fetchCards();
+  }, [deckId, isLearningMode]);
 
-  const fetchCardsForReview = async () => {
+  const fetchCards = async () => {
     try {
-      const response = await axios.get('/review/cards', {
-        params: {
-          deckId: deckId,
-        },
+      const mode = isLearningMode ? 'mixed' : 'review_only';
+      const response = await axios.get(`review/cards/study/${deckId}`, {
+        params: { mode },
       });
-      
-      // Разделяем карточки на новые и для повторения
-      const newOnes = response.data.filter(card => card.new);
-      const reviewOnes = response.data.filter(card => !card.new);
-      
-      setNewCards(newOnes);
-      setReviewCards(reviewOnes);
-      
-      // Если есть новые карточки, начинаем с режима изучения
-      if (newOnes.length > 0) {
-        setCardsToReview(newOnes);
-        setIsLearningMode(true);
-        setShowBack(true); // Сразу показываем обратную сторону для новых карточек
-      } else {
-        setCardsToReview(reviewOnes);
-        setIsLearningMode(false);
-        setShowBack(false);
-      }
-      
-    } catch (error) {
-      console.error('Ошибка при получении карточек для повторения:', error);
-      setError('Ошибка при получении карточек для повторения');
-    }
-  };
 
-  const handleNext = () => {
-    const currentCard = cardsToReview[currentCardIndex];
-    
-    if (isLearningMode) {
-      // Добавляем карточку в массив для повторения и обновляем её статус
-      const updatedCard = { ...currentCard, new: false };
-      setReviewCards(prev => [...prev, updatedCard]);
-    }
-
-    if (currentCardIndex + 1 < cardsToReview.length) {
-      setCurrentCardIndex(currentCardIndex + 1);
-      setShowBack(true);
-      setShowHint(false);
-      setAiExplanation('');
-    } else {
-      // Если закончились карточки в текущем режиме
-      if (isLearningMode) {
-        // Переходим к повторению всех карточек
-        setCardsToReview([...reviewCards, { ...currentCard, new: false }]);
-        setCurrentCardIndex(0);
-        setIsLearningMode(false);
-        setShowBack(false);
+      if (response.data.length > 0) {
+        setCardsToReview(response.data);
+        setShowBack(isLearningMode); // В режиме изучения сразу показываем ответ
       } else {
-        // Завершаем сессию только если закончилось повторение
-        alert('Вы завершили повторение карточек!');
         onFinish();
       }
+      setCurrentCardIndex(0);
+    } catch (error) {
+      console.error('Error fetching cards:', error);
+      setError('Ошибка при получении карточек');
     }
   };
 
-  const handleReviewAction = async (action) => {
+  const handleNext = async () => {
     const currentCard = cardsToReview[currentCardIndex];
-
+    
     try {
-      await axios.post('/review/cards', {
-        userCardId: currentCard.cardId,
-        action: action,
-      });
+      if (isLearningMode && currentCard.mode === 'MIXED') {
+        await axios.post('review/cards', {
+          userCardId: currentCard.cardId,
+          action: 'LEARN'
+        });
+      }
 
       if (currentCardIndex + 1 < cardsToReview.length) {
         setCurrentCardIndex(currentCardIndex + 1);
-        setShowBack(false);
+        setShowBack(isLearningMode && cardsToReview[currentCardIndex + 1].mode === 'MIXED');
         setShowHint(false);
         setAiExplanation('');
+        setShowDictionary(false);
       } else {
-        // Завершаем сессию только после повторения
-        alert('Вы завершили повторение карточек!');
         onFinish();
       }
     } catch (error) {
-      console.error('Ошибка при отправке результата повторения:', error);
-      setError('Ошибка при отправке результата повторения');
+      console.error('Error updating card:', error);
+      setError('Ошибка при обновлении карточки');
     }
   };
 
@@ -115,18 +70,17 @@ const Review = ({ deckId, onFinish }) => {
   };
 
   const getAiExplanation = async () => {
-    setShowDictionary(false); // Закрываем словарь при запросе объяснения ИИ
+    setShowDictionary(false);
     const currentCard = cardsToReview[currentCardIndex];
     setIsLoadingAi(true);
     try {
-      const response = await axios.get('/api/ai/translate', {
+      const response = await axios.get('api/ai/translate', {
         params: {
           word: currentCard.front,
           language: 'ru'
         }
       });
       
-      // Форматируем текст, заменяя маркеры на HTML
       const formattedText = response.data
         .split('\n')
         .map(line => {
@@ -158,22 +112,45 @@ const Review = ({ deckId, onFinish }) => {
   };
 
   const openDictionary = () => {
-    setAiExplanation(''); // Закрываем объяснение ИИ при открытии словаря
+    setAiExplanation('');
     setShowDictionary(true);
   };
 
   const getDictionaryUrl = (word) => {
-    if (isJapaneseDeck) {
+    if (isJapaneseDeck && word) {
       return `https://jisho.org/search/${encodeURIComponent(word)}`;
     }
-    // TODO: Добавить другие словари для разных языков
-    return ''; // Временно возвращаем пустую строку для других языков
+    return '';
+  };
+
+  const handleReviewAction = async (action) => {
+    const currentCard = cardsToReview[currentCardIndex];
+    
+    try {
+      await axios.post('review/cards', {
+        userCardId: currentCard.cardId,
+        action: action
+      });
+
+      if (currentCardIndex + 1 < cardsToReview.length) {
+        setCurrentCardIndex(currentCardIndex + 1);
+        setShowBack(isLearningMode && cardsToReview[currentCardIndex + 1].mode === 'MIXED');
+        setShowHint(false);
+        setAiExplanation('');
+        setShowDictionary(false);
+      } else {
+        onFinish();
+      }
+    } catch (error) {
+      console.error('Error updating card:', error);
+      setError('Ошибка при обновлении карточки');
+    }
   };
 
   if (cardsToReview.length === 0) {
     return (
       <div>
-        <h3>Нет карточек для повторения в этой колоде</h3>
+        <h3>Нет карточек для {isLearningMode ? 'изучения' : 'повторения'} в этой колоде</h3>
         <button onClick={onFinish} className="review-back-button">
           <i className="fas fa-arrow-left"></i> Вернуться к колоде
         </button>
@@ -187,13 +164,15 @@ const Review = ({ deckId, onFinish }) => {
         <button onClick={onFinish} className="review-back-button">
           <i className="fas fa-arrow-left"></i> Вернуться к колоде
         </button>
-        <h3>{isLearningMode ? 'Обучение' : 'Повторение'}</h3>
+        
+        <h3>{isLearningMode ? 'Изучение новых слов' : 'Повторение'}</h3>
         {error && <div className="error-message">{error}</div>}
         
-        <div className={`review-card ${isLearningMode ? 'learning-mode' : ''}`} onClick={() => !isLearningMode && setShowBack(!showBack)}>
+        <div className={`review-card ${cardsToReview[currentCardIndex]?.mode === 'LEARN' ? 'learning-mode' : ''}`} 
+             onClick={() => cardsToReview[currentCardIndex]?.mode === 'REVIEW' && setShowBack(!showBack)}>
           <div className="review-card-content">
             <div className="review-card-text">
-              {showBack ? (
+              {(showBack || cardsToReview[currentCardIndex]?.mode === 'LEARN') ? (
                 <>
                   <div className="review-card-front-small">{cardsToReview[currentCardIndex]?.front}</div>
                   <div className="review-card-back">{cardsToReview[currentCardIndex]?.back}</div>
@@ -202,7 +181,8 @@ const Review = ({ deckId, onFinish }) => {
                 cardsToReview[currentCardIndex]?.front
               )}
             </div>
-            {!isLearningMode && cardsToReview[currentCardIndex]?.hint && !showBack && (
+            
+            {cardsToReview[currentCardIndex]?.mode === 'REVIEW' && cardsToReview[currentCardIndex]?.hint && !showBack && (
               <div className="review-hint">
                 {showHint ? (
                   <span>{cardsToReview[currentCardIndex]?.hint}</span>
@@ -221,7 +201,7 @@ const Review = ({ deckId, onFinish }) => {
             )}
           </div>
 
-          {showBack && (
+          {(showBack || cardsToReview[currentCardIndex]?.mode === 'LEARN') && (
             <div className="review-ai-section" onClick={e => e.stopPropagation()}>
               {!aiExplanation && !showDictionary && (
                 <>
@@ -284,46 +264,38 @@ const Review = ({ deckId, onFinish }) => {
         </div>
 
         <div className="review-progress">
-          Карточка {currentCardIndex + 1} из {cardsToReview.length}
+          {isLearningMode ? (
+            <>Изучение карточки {currentCardIndex + 1} из {cardsToReview.length}</>
+          ) : (
+            <>Повторение карточки {currentCardIndex + 1} из {cardsToReview.length}</>
+          )}
         </div>
 
-        {isLearningMode ? (
-          <div className="review-actions">
+        <div className="review-actions">
+          {cardsToReview[currentCardIndex]?.mode === 'LEARN' ? (
             <button 
               onClick={handleNext}
               className="review-next-button"
             >
-              Далее
+              {currentCardIndex + 1 < cardsToReview.length ? 'Следующая карточка' : 'Закончить'}
             </button>
-          </div>
-        ) : (
-          <div className="review-actions">
-            <button 
-              onClick={() => handleReviewAction('AGAIN')}
-              className="review-again-button"
-            >
-              Повторить
-            </button>
-            <button 
-              onClick={() => handleReviewAction('HARD')}
-              className="review-hard-button"
-            >
-              Трудно
-            </button>
-            <button 
-              onClick={() => handleReviewAction('GOOD')}
-              className="review-good-button"
-            >
-              Хорошо
-            </button>
-            <button 
-              onClick={() => handleReviewAction('EASY')}
-              className="review-easy-button"
-            >
-              Легко
-            </button>
-          </div>
-        )}
+          ) : (
+            <>
+              <button onClick={() => handleReviewAction('AGAIN')} className="review-again-button">
+                Повторить
+              </button>
+              <button onClick={() => handleReviewAction('HARD')} className="review-hard-button">
+                Трудно
+              </button>
+              <button onClick={() => handleReviewAction('GOOD')} className="review-good-button">
+                Хорошо
+              </button>
+              <button onClick={() => handleReviewAction('EASY')} className="review-easy-button">
+                Легко
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
