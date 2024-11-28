@@ -159,25 +159,25 @@ const CardList = ({ deckId, onStartReview, onStartLearning, onBack }) => {
         return a[sortBy] - b[sortBy];
       });
     } else {
-      // Default sorting: new -> needs review -> by next review date
+      // Default sorting: needs review (not new) -> new -> others by next review date
       filtered.sort((a, b) => {
-        // Сначала новые карточки
-        if (a.new !== b.new) {
-          return b.new ? 1 : -1;
-        }
-        
         const now = new Date();
         const aReviewDate = new Date(a.nextReview);
         const bReviewDate = new Date(b.nextReview);
-        const aNeedsReview = aReviewDate <= now;
-        const bNeedsReview = bReviewDate <= now;
+        const aNeedsReview = aReviewDate <= now && !a.new;
+        const bNeedsReview = bReviewDate <= now && !b.new;
 
-        // Потом карточки, требующие повторения
+        // Сначала карточки для повторения (не new)
         if (aNeedsReview !== bNeedsReview) {
           return bNeedsReview ? 1 : -1;
         }
 
-        // Наконец, сортировка по времени следующего повторения
+        // Потом новые карточки
+        if (a.new !== b.new) {
+          return b.new ? 1 : -1;
+        }
+
+        // Остальные сортируем по дате следующего повторения
         return aReviewDate - bReviewDate;
       });
     }
