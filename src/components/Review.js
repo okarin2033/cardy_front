@@ -7,29 +7,20 @@ import '../styles/review.css';
 const Review = ({ deckId, onFinish }) => {
   const { auth } = useContext(AuthContext);
   const [cardsToReview, setCardsToReview] = useState([]);
+  const [newCards, setNewCards] = useState([]);
+  const [reviewCards, setReviewCards] = useState([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const [isLearningMode, setIsLearningMode] = useState(true);
   const [showBack, setShowBack] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [error, setError] = useState('');
   const [aiExplanation, setAiExplanation] = useState('');
   const [isLoadingAi, setIsLoadingAi] = useState(false);
   const [showDictionary, setShowDictionary] = useState(false);
-
-  // TODO: В будущем добавить поле language в модель колоды
-  // и использовать его для определения, какой словарь показывать
-  const isJapaneseDeck = true; // Временное решение, заменить на проверку языка колоды
-  
-  const getDictionaryUrl = (word) => {
-    if (isJapaneseDeck) {
-      return `https://jisho.org/search/${encodeURIComponent(word)}`;
-    }
-    // TODO: Добавить другие словари для разных языков
-    return ''; // Временно возвращаем пустую строку для других языков
-  };
+  const [isJapaneseDeck, setIsJapaneseDeck] = useState(true);
 
   useEffect(() => {
     fetchCardsForReview();
-    // eslint-disable-next-line
   }, [deckId]);
 
   const fetchCardsForReview = async () => {
@@ -39,10 +30,58 @@ const Review = ({ deckId, onFinish }) => {
           deckId: deckId,
         },
       });
-      setCardsToReview(response.data);
+      
+      // Разделяем карточки на новые и для повторения
+      const newOnes = response.data.filter(card => card.new);
+      const reviewOnes = response.data.filter(card => !card.new);
+      
+      setNewCards(newOnes);
+      setReviewCards(reviewOnes);
+      
+      // Если есть новые карточки, начинаем с режима изучения
+      if (newOnes.length > 0) {
+        setCardsToReview(newOnes);
+        setIsLearningMode(true);
+        setShowBack(true); // Сразу показываем обратную сторону для новых карточек
+      } else {
+        setCardsToReview(reviewOnes);
+        setIsLearningMode(false);
+        setShowBack(false);
+      }
+      
     } catch (error) {
       console.error('Ошибка при получении карточек для повторения:', error);
       setError('Ошибка при получении карточек для повторения');
+    }
+  };
+
+  const handleNext = () => {
+    const currentCard = cardsToReview[currentCardIndex];
+    
+    if (isLearningMode) {
+      // Добавляем карточку в массив для повторения и обновляем её статус
+      const updatedCard = { ...currentCard, new: false };
+      setReviewCards(prev => [...prev, updatedCard]);
+    }
+
+    if (currentCardIndex + 1 < cardsToReview.length) {
+      setCurrentCardIndex(currentCardIndex + 1);
+      setShowBack(true);
+      setShowHint(false);
+      setAiExplanation('');
+    } else {
+      // Если закончились карточки в текущем режиме
+      if (isLearningMode) {
+        // Переходим к повторению всех карточек
+        setCardsToReview([...reviewCards, { ...currentCard, new: false }]);
+        setCurrentCardIndex(0);
+        setIsLearningMode(false);
+        setShowBack(false);
+      } else {
+        // Завершаем сессию только если закончилось повторение
+        alert('Вы завершили повторение карточек!');
+        onFinish();
+      }
     }
   };
 
@@ -59,8 +98,9 @@ const Review = ({ deckId, onFinish }) => {
         setCurrentCardIndex(currentCardIndex + 1);
         setShowBack(false);
         setShowHint(false);
-        setAiExplanation(''); // Сбрасываем объяснение ИИ при переходе к следующей карточке
+        setAiExplanation('');
       } else {
+        // Завершаем сессию только после повторения
         alert('Вы завершили повторение карточек!');
         onFinish();
       }
@@ -122,6 +162,14 @@ const Review = ({ deckId, onFinish }) => {
     setShowDictionary(true);
   };
 
+  const getDictionaryUrl = (word) => {
+    if (isJapaneseDeck) {
+      return `https://jisho.org/search/${encodeURIComponent(word)}`;
+    }
+    // TODO: Добавить другие словари для разных языков
+    return ''; // Временно возвращаем пустую строку для других языков
+  };
+
   if (cardsToReview.length === 0) {
     return (
       <div>
@@ -133,26 +181,31 @@ const Review = ({ deckId, onFinish }) => {
     );
   }
 
-  const currentCard = cardsToReview[currentCardIndex];
-
   return (
     <div className="review-container">
       <div className="review-content">
         <button onClick={onFinish} className="review-back-button">
           <i className="fas fa-arrow-left"></i> Вернуться к колоде
         </button>
-        <h3>Повторение карточек</h3>
+        <h3>{isLearningMode ? 'Обучение' : 'Повторение'}</h3>
         {error && <div className="error-message">{error}</div>}
         
-        <div className="review-card" onClick={() => setShowBack(!showBack)}>
+        <div className={`review-card ${isLearningMode ? 'learning-mode' : ''}`} onClick={() => !isLearningMode && setShowBack(!showBack)}>
           <div className="review-card-content">
             <div className="review-card-text">
-              {showBack ? currentCard.back : currentCard.front}
+              {showBack ? (
+                <>
+                  <div className="review-card-front-small">{cardsToReview[currentCardIndex]?.front}</div>
+                  <div className="review-card-back">{cardsToReview[currentCardIndex]?.back}</div>
+                </>
+              ) : (
+                cardsToReview[currentCardIndex]?.front
+              )}
             </div>
-            {currentCard.hint && !showBack && (
+            {!isLearningMode && cardsToReview[currentCardIndex]?.hint && !showBack && (
               <div className="review-hint">
                 {showHint ? (
-                  <span>{currentCard.hint}</span>
+                  <span>{cardsToReview[currentCardIndex]?.hint}</span>
                 ) : (
                   <button 
                     className="review-hint-button" 
@@ -219,7 +272,7 @@ const Review = ({ deckId, onFinish }) => {
                   </button>
                   <div className="review-dictionary-content">
                     <iframe
-                      src={getDictionaryUrl(currentCard.front)}
+                      src={getDictionaryUrl(cardsToReview[currentCardIndex]?.front)}
                       className="review-dictionary-frame"
                       title="Dictionary"
                     />
@@ -234,32 +287,43 @@ const Review = ({ deckId, onFinish }) => {
           Карточка {currentCardIndex + 1} из {cardsToReview.length}
         </div>
 
-        <div className="review-actions">
-          <button 
-            onClick={() => handleReviewAction('AGAIN')}
-            className="review-again-button"
-          >
-            Повторить
-          </button>
-          <button 
-            onClick={() => handleReviewAction('HARD')}
-            className="review-hard-button"
-          >
-            Трудно
-          </button>
-          <button 
-            onClick={() => handleReviewAction('GOOD')}
-            className="review-good-button"
-          >
-            Хорошо
-          </button>
-          <button 
-            onClick={() => handleReviewAction('EASY')}
-            className="review-easy-button"
-          >
-            Легко
-          </button>
-        </div>
+        {isLearningMode ? (
+          <div className="review-actions">
+            <button 
+              onClick={handleNext}
+              className="review-next-button"
+            >
+              Далее
+            </button>
+          </div>
+        ) : (
+          <div className="review-actions">
+            <button 
+              onClick={() => handleReviewAction('AGAIN')}
+              className="review-again-button"
+            >
+              Повторить
+            </button>
+            <button 
+              onClick={() => handleReviewAction('HARD')}
+              className="review-hard-button"
+            >
+              Трудно
+            </button>
+            <button 
+              onClick={() => handleReviewAction('GOOD')}
+              className="review-good-button"
+            >
+              Хорошо
+            </button>
+            <button 
+              onClick={() => handleReviewAction('EASY')}
+              className="review-easy-button"
+            >
+              Легко
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
