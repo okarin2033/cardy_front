@@ -3,11 +3,11 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const instance = axios.create({
-  baseURL: 'http://localhost:8080/v1', // Убедитесь, что это соответствует вашему бэкенду
+  baseURL: process.env.REACT_APP_API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true, // Если вы отправляете куки
+  withCredentials: true,
 });
 
 // Добавляем перехватчик для установки токена
