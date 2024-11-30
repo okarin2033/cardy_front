@@ -63,8 +63,8 @@
   min-width: 120px;
   height: 48px;
   padding: 12px 24px;
-  background-color: var(--accent-color);
-  color: white;
+  background-color: var(--button-primary);
+  color: var(--button-text);
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -74,7 +74,7 @@
 }
 
 .create-text-btn:hover {
-  background-color: var(--accent-hover);
+  background-color: var(--button-primary-hover);
   transform: translateY(-1px);
 }
 

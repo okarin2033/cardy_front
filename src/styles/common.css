@@ -14,7 +14,7 @@
 }
 
 .modal-form {
-  background: var(--card-bg);
+  background: var(--bg-color);
   padding: 32px;
   border-radius: 12px;
   width: 100%;
@@ -29,6 +29,7 @@
   text-align: center;
   color: var(--text-color);
   font-size: 24px;
+  font-weight: 600;
 }
 
 .modal-form form {
@@ -49,7 +50,7 @@
   padding: 12px;
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  background: var(--input-bg);
+  background: var(--bg-color);
   color: var(--text-color);
   font-size: 16px;
   height: 48px;
