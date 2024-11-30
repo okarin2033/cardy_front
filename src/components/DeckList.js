@@ -41,51 +41,50 @@ const DeckList = ({ onSelectDeck, onReviewDeck }) => {
     }
   };
 
-  if (isCreating) {
-    return (
-      <CreateDeck
-        onDeckCreated={handleDeckCreated}
-        onCancel={() => setIsCreating(false)}
-      />
-    );
-  }
-
   return (
-    <div className="deck-list">
-      <h2>Мои коллекции</h2>
-      {error && <div className="error-message">{error}</div>}
-      <button className="create-button" onClick={() => setIsCreating(true)}>
-        Создать новую коллекцию
-      </button>
-      <div className="decks-grid">
-        {decks.map(deck => (
-          <div key={deck.id} className="deck-card">
-            <h3>{deck.name}</h3>
-            <p>Количество карточек: {deck.count}</p>
-            <p className={deck.needReview > 0 ? "need-review" : "all-reviewed"}>
-              {deck.needReview > 0 ? '🔄' : '✓'} 
-              {deck.needReview > 0 
-                ? <span className="review-count">{deck.needReview} нуждаются в повторении</span>
-                : 'Все карточки повторены'
-              }
-            </p>
-            <div className="deck-actions">
-              <button className="open-button" onClick={() => onSelectDeck(deck.id)}>Открыть</button>
-              <button 
-                className="repeat-button" 
-                onClick={() => onReviewDeck(deck.id)}
-                disabled={deck.needReview === 0}
-              >
-                Повторить
-              </button>
-              <button className="delete-button" onClick={() => handleDeleteDeck(deck.id)}>
-                🗑️
-              </button>
+    <>
+      <div className="deck-list">
+        <h2>Мои коллекции</h2>
+        {error && <div className="error-message">{error}</div>}
+        <button className="create-button" onClick={() => setIsCreating(true)}>
+          Создать новую коллекцию
+        </button>
+        <div className="decks-grid">
+          {decks.map(deck => (
+            <div key={deck.id} className="deck-card">
+              <h3>{deck.name}</h3>
+              <p>Количество карточек: {deck.count}</p>
+              <p className={deck.needReview > 0 ? "need-review" : "all-reviewed"}>
+                {deck.needReview > 0 ? '🔄' : '✓'} 
+                {deck.needReview > 0 
+                  ? <span className="review-count">{deck.needReview} нуждаются в повторении</span>
+                  : 'Все карточки повторены'
+                }
+              </p>
+              <div className="deck-actions">
+                <button className="open-button" onClick={() => onSelectDeck(deck.id)}>Открыть</button>
+                <button 
+                  className="repeat-button" 
+                  onClick={() => onReviewDeck(deck.id)}
+                  disabled={deck.needReview === 0}
+                >
+                  Повторить
+                </button>
+                <button className="delete-button" onClick={() => handleDeleteDeck(deck.id)}>
+                  🗑️
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+      {isCreating && (
+        <CreateDeck
+          onDeckCreated={handleDeckCreated}
+          onCancel={() => setIsCreating(false)}
+        />
+      )}
+    </>
   );
 };
 

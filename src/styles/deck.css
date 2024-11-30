@@ -203,92 +203,113 @@
 }
 
 /* Create deck form */
-.create-deck-container {
+.create-deck-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
-  min-height: 50vh;
+  z-index: 1000;
 }
 
 .create-deck-form {
-  background-color: var(--card-bg);
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: var(--card-bg);
+  padding: 32px;
+  border-radius: 12px;
   width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .create-deck-form h2 {
+  margin: 0 0 32px 0;
   text-align: center;
-  margin-bottom: 25px;
   color: var(--text-color);
-}
-
-.create-deck-form .form-group {
-  margin: 0 auto 20px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
+  font-size: 24px;
 }
 
 .create-deck-form form {
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.create-deck-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
 }
 
 .deck-name-input {
   width: 100%;
-  max-width: 400px;
-  padding: 12px 15px;
-  border: 1px solid var(--input-border);
-  border-radius: 4px;
-  background-color: var(--input-bg);
-  color: var(--input-text);
-  font-size: 1rem;
-  display: block;
-  margin: 0 auto;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--input-bg);
+  color: var(--text-color);
+  font-size: 16px;
+  height: 48px;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
 }
 
-.create-deck-form .form-buttons {
+.deck-name-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.form-buttons {
   display: flex;
-  gap: 15px;
-  justify-content: center;
-  margin-top: 25px;
+  gap: 16px;
+  margin-top: 8px;
 }
 
-.create-deck-form .create-button,
-.create-deck-form .cancel-button {
-  padding: 10px 25px;
-  border: none;
-  border-radius: 4px;
+.create-button,
+.cancel-button {
+  flex: 1;
+  height: 48px;
+  padding: 0 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
   cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s;
-  height: 40px;
-  line-height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  transition: all 0.2s;
 }
 
-.create-deck-form .create-button {
-  background-color: var(--button-action);
-  color: var(--nav-text);
+.create-button {
+  background: var(--primary-color);
+  color: white;
+  border: none;
 }
 
-.create-deck-form .cancel-button {
-  background-color: var(--button-secondary);
-  color: var(--nav-text);
+.create-button:hover {
+  background: var(--primary-hover);
 }
 
-.create-deck-form .create-button:hover {
-  background-color: var(--button-action-hover);
+.cancel-button {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
 }
 
-.create-deck-form .cancel-button:hover {
-  background-color: var(--button-secondary-hover);
+.cancel-button:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.error-message {
+  color: var(--error-color);
+  background: var(--error-bg);
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  text-align: center;
+  font-size: 14px;
 }
 
 /* Card list */
