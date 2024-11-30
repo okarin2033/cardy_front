@@ -18,6 +18,15 @@ const AppContent = () => {
   return (
     <div className={`app-container ${isDarkMode ? 'dark-theme' : ''}`}>
       <nav className="navbar">
+        <div className="theme-toggle">
+          <button onClick={toggleTheme}>
+            {isDarkMode ? (
+              <i className="fas fa-sun"></i>
+            ) : (
+              <i className="fas fa-moon"></i>
+            )}
+          </button>
+        </div>
         <ul>
           <li>
             <Link to="/" className={location.pathname === '/' ? 'active' : ''}>
@@ -28,15 +37,6 @@ const AppContent = () => {
             <Link to="/profile" className={location.pathname === '/profile' ? 'active' : ''}>
               Профиль
             </Link>
-          </li>
-          <li className="theme-toggle">
-            <button onClick={toggleTheme}>
-              {isDarkMode ? (
-                <i className="fas fa-sun"></i>
-              ) : (
-                <i className="fas fa-moon"></i>
-              )}
-            </button>
           </li>
         </ul>
       </nav>

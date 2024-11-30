@@ -40,14 +40,4 @@
   background-color: #45a049;
 }
 
-.navbar ul li a {
-  text-decoration: none;
-  color: inherit;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.navbar ul li a.active {
-  background-color: rgba(255, 255, 255, 0.1);
-}
+/* Удалили дублирующиеся стили навигации */

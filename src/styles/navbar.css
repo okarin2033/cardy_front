@@ -1,15 +1,15 @@
 /* Navigation styles */
 .navbar {
   background-color: var(--nav-bg);
-  padding: 1rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  color: var(--nav-text);
   padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  color: var(--nav-text);
+  border-radius: 12px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
 }
 
 .navbar ul {
@@ -17,37 +17,55 @@
   padding: 0;
   margin: 0;
   display: flex;
-  gap: 20px;
+  gap: 12px;
   align-items: center;
   width: 100%;
-}
-
-.navbar li:not(.theme-toggle) {
-  margin-right: 20px;
-}
-
-.navbar button {
-  background-color: transparent;
-  color: var(--nav-text);
   border: none;
-  padding: 12px 24px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 1rem;
 }
 
-.navbar button:hover,
-.navbar button.active {
+.navbar li {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.navbar li::after,
+.navbar li::before {
+  display: none;
+}
+
+.navbar li a {
+  color: var(--nav-text);
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: inline-block;
+  background: transparent;
+  border: none;
+  position: relative;
+  margin: 0;
+}
+
+.navbar li a::after,
+.navbar li a::before {
+  display: none;
+}
+
+.navbar li a:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-.navbar button.active {
-  border-bottom: 2px solid var(--nav-text);
+.navbar li a.active {
+  background-color: rgba(255, 255, 255, 0.15);
 }
 
 .theme-toggle {
   margin-left: auto;
+  margin-right: 0;
+  order: 1;
 }
 
 .theme-toggle button {
@@ -58,17 +76,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--deck-nav-button);
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--nav-text);
+  transition: all 0.3s ease;
 }
 
 .theme-toggle button:hover {
-  background-color: var(--deck-nav-button-hover);
-}
-
-.navbar li {
-  margin-right: 10px;
-}
-
-.navbar li:last-child {
-  margin-right: 0;
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: rotate(15deg);
 }
