@@ -5,6 +5,7 @@ import DeckList from './components/DeckList';
 import CardList from './components/CardList';
 import Review from './components/Review';
 import Profile from './components/Profile';
+import TextList from './components/TextList';
 import './App.css';
 import { AuthContext } from './context/AuthContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
@@ -38,6 +39,11 @@ const AppContent = () => {
               Профиль
             </Link>
           </li>
+          <li>
+            <Link to="/texts" className={location.pathname === '/texts' ? 'active' : ''}>
+              Тексты
+            </Link>
+          </li>
         </ul>
       </nav>
 
@@ -59,6 +65,7 @@ const AppContent = () => {
           }
         />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/texts" element={<TextList />} />
         <Route path="/deck/:deckId" element={<CardList />} />
         <Route path="/deck/:deckId/review" element={<Review />} />
         <Route path="/deck/:deckId/learn" element={<Review />} />

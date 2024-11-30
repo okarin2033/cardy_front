@@ -2,6 +2,7 @@
 import React, { useState, useContext } from 'react';
 import axios from '../axiosConfig';
 import { AuthContext } from '../context/AuthContext';
+import '../styles/profile.css';
 
 const Profile = () => {
   const { auth, login, logout } = useContext(AuthContext);
@@ -79,60 +80,64 @@ const Profile = () => {
 
   if (auth.isAuthenticated) {
     return (
-      <div className="profile">
-        <h2>Профиль</h2>
-        <p>Имя: {auth.user.name || auth.user.username}</p>
-        <p>ID: {auth.user.id}</p>
-        <button onClick={handleLogout}>Выйти</button>
+      <div className="profile-page">
+        <div className="profile">
+          <h2>Профиль</h2>
+          <p>Имя: {auth.user.name || auth.user.username}</p>
+          <p>ID: {auth.user.id}</p>
+          <button onClick={handleLogout}>Выйти</button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="profile">
-      <h2>{isLogin ? 'Вход' : 'Регистрация'}</h2>
-      {error && <div className="error-message">{error}</div>}
-      <form onSubmit={isLogin ? handleLogin : handleRegister}>
-        <div className="form-group">
-          <label htmlFor="username">Логин</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={form.username}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Пароль</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        {!isLogin && (
+    <div className="profile-page">
+      <div className="profile">
+        <h2>{isLogin ? 'Вход' : 'Регистрация'}</h2>
+        {error && <div className="error-message">{error}</div>}
+        <form onSubmit={isLogin ? handleLogin : handleRegister}>
           <div className="form-group">
-            <label htmlFor="name">Имя</label>
+            <label htmlFor="username">Логин</label>
             <input
               type="text"
-              id="name"
-              name="name"
-              value={form.name}
+              id="username"
+              name="username"
+              value={form.username}
               onChange={handleChange}
-              required={!isLogin}
+              required
             />
           </div>
-        )}
-        <button type="submit">{isLogin ? 'Войти' : 'Зарегистрироваться'}</button>
-      </form>
-      <button className="toggle-button" onClick={toggleForm}>
-        {isLogin ? 'Нет аккаунта? Зарегистрироваться' : 'Есть аккаунт? Войти'}
-      </button>
+          <div className="form-group">
+            <label htmlFor="password">Пароль</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          {!isLogin && (
+            <div className="form-group">
+              <label htmlFor="name">Имя</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                required={!isLogin}
+              />
+            </div>
+          )}
+          <button type="submit">{isLogin ? 'Войти' : 'Зарегистрироваться'}</button>
+        </form>
+        <button className="toggle-button" onClick={toggleForm}>
+          {isLogin ? 'Нет аккаунта? Зарегистрироваться' : 'Есть аккаунт? Войти'}
+        </button>
+      </div>
     </div>
   );
 };

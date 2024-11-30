@@ -6,6 +6,29 @@
 @import './styles/profile.css';
 @import './styles/review.css';
 
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  align-items: center;
+}
+
+.navbar {
+  width: 100%;
+  padding: 0 24px;
+  box-sizing: border-box;
+  margin-bottom: 40px;
+}
+
+/* Main content area */
+.app-container > *:not(.navbar) {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+
 /* Back button (hidden) */
 .back-button {
   display: none;
