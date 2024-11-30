@@ -20,6 +20,8 @@
   width: 100%;
   max-width: 400px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 2px solid var(--border-color);
+  backdrop-filter: blur(8px);
 }
 
 .modal-form h2 {
