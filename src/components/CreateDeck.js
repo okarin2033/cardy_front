@@ -2,7 +2,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import axios from '../axiosConfig';
 import { AuthContext } from '../context/AuthContext';
-import '../styles/deck.css';
+import '../styles/common.css';
 
 const CreateDeck = ({ onDeckCreated, onCancel }) => {
   const { auth } = useContext(AuthContext);
@@ -45,8 +45,8 @@ const CreateDeck = ({ onDeckCreated, onCancel }) => {
   };
 
   return (
-    <div className="create-deck-overlay" onClick={handleOverlayClick}>
-      <div className="create-deck-form">
+    <div className="modal-overlay" onClick={handleOverlayClick}>
+      <div className="modal-form">
         <h2>Создание новой коллекции</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -55,16 +55,16 @@ const CreateDeck = ({ onDeckCreated, onCancel }) => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Введите название коллекции"
-              className="deck-name-input"
+              className="form-input"
               autoFocus
             />
           </div>
           {error && <div className="error-message">{error}</div>}
-          <div className="form-buttons">
-            <button type="submit" className="create-button">
+          <div className="form-actions">
+            <button type="submit" className="primary-button">
               Создать
             </button>
-            <button type="button" className="cancel-button" onClick={onCancel}>
+            <button type="button" className="secondary-button" onClick={onCancel}>
               Отмена
             </button>
           </div>

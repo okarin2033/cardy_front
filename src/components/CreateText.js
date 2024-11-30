@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../axiosConfig';
-import '../styles/text.css';
+import '../styles/common.css';
 
 const CreateText = ({ onClose, onTextCreated }) => {
   const [title, setTitle] = useState('');
@@ -10,7 +10,6 @@ const CreateText = ({ onClose, onTextCreated }) => {
 
   useEffect(() => {
     fetchLanguages();
-    // Добавляем обработчик клавиши Escape
     const handleEscape = (e) => {
       if (e.key === 'Escape') {
         onClose();
@@ -58,8 +57,8 @@ const CreateText = ({ onClose, onTextCreated }) => {
   };
 
   return (
-    <div className="create-text-overlay" onClick={handleOverlayClick}>
-      <div className="create-text-form">
+    <div className="modal-overlay" onClick={handleOverlayClick}>
+      <div className="modal-form">
         <h2>Создать новый текст</h2>
         {error && <div className="error-message">{error}</div>}
         <form onSubmit={handleSubmit}>
@@ -69,7 +68,7 @@ const CreateText = ({ onClose, onTextCreated }) => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Название текста"
-              className="text-input"
+              className="form-input"
               autoFocus
             />
           </div>
@@ -77,7 +76,7 @@ const CreateText = ({ onClose, onTextCreated }) => {
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
-              className="text-input"
+              className="form-input"
             >
               {languages.map((lang) => (
                 <option key={lang.code} value={lang.code}>
@@ -87,13 +86,13 @@ const CreateText = ({ onClose, onTextCreated }) => {
             </select>
           </div>
           <div className="form-actions">
-            <button type="submit" className="create-text-btn">
+            <button type="submit" className="primary-button">
               Создать
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="cancel-text-btn"
+              className="secondary-button"
             >
               Отмена
             </button>
