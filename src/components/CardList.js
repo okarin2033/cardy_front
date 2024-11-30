@@ -1,5 +1,6 @@
 // src/components/CardList.js
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from '../axiosConfig.js';
 import DeckNavigation from './DeckNavigation.js';
 import CardControls from './CardControls.js';
@@ -7,7 +8,9 @@ import CardItem from './CardItem.js';
 import { SORT_OPTIONS, FILTER_OPTIONS } from '../types/cards.js';
 import '../styles/card.css';
 
-const CardList = ({ deckId, onStartReview, onStartLearning, onBack }) => {
+const CardList = () => {
+  const { deckId } = useParams();
+  const navigate = useNavigate();
   const [cards, setCards] = useState([]);
   const [newCard, setNewCard] = useState({ front: '', back: '', hint: '' });
   const [error, setError] = useState('');
@@ -190,9 +193,9 @@ const CardList = ({ deckId, onStartReview, onStartLearning, onBack }) => {
   return (
     <div className="card-list">
       <DeckNavigation 
-        onBack={onBack} 
-        onStartReview={onStartReview}
-        onStartLearning={onStartLearning}
+        onBack={() => navigate('/')}
+        onStartReview={() => navigate(`/deck/${deckId}/review`)}
+        onStartLearning={() => navigate(`/deck/${deckId}/learn`)}
         reviewCount={reviewCount}
         newCardsCount={newCardsCount}
         searchQuery={searchQuery}

@@ -1,10 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import axios from '../axiosConfig';
 import { AuthContext } from '../context/AuthContext';
 import '../styles/review.css';
 
-const Review = ({ deckId, isLearningMode, onFinish }) => {
+const Review = () => {
+  const { deckId } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isLearningMode = location.pathname.includes('/learn');
   const { auth } = useContext(AuthContext);
+  
   const [cardsToReview, setCardsToReview] = useState([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [showBack, setShowBack] = useState(false);
@@ -17,63 +23,8 @@ const Review = ({ deckId, isLearningMode, onFinish }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasData, setHasData] = useState(false);
 
-  useEffect(() => {
-    fetchCards();
-  }, [deckId, isLearningMode]);
-
-  const fetchCards = async () => {
-    setIsLoading(true);
-    setHasData(false);
-    try {
-      const mode = isLearningMode ? 'mixed' : 'review_only';
-      const response = await axios.get(`review/cards/study/${deckId}`, {
-        params: { mode },
-      });
-
-      if (response.data.length > 0) {
-        setCardsToReview(response.data);
-        setShowBack(isLearningMode);
-        setHasData(true);
-      } else {
-        onFinish();
-      }
-      setCurrentCardIndex(0);
-    } catch (error) {
-      console.error('Error fetching cards:', error);
-      setError('Ошибка при получении карточек');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleNext = async () => {
-    const currentCard = cardsToReview[currentCardIndex];
-    
-    try {
-      if (isLearningMode && currentCard.mode === 'MIXED') {
-        await axios.post('review/cards', {
-          userCardId: currentCard.cardId,
-          action: 'LEARN'
-        });
-      }
-
-      if (currentCardIndex + 1 < cardsToReview.length) {
-        setCurrentCardIndex(currentCardIndex + 1);
-        setShowBack(isLearningMode && cardsToReview[currentCardIndex + 1].mode === 'MIXED');
-        setShowHint(false);
-        setAiExplanation('');
-        setShowDictionary(false);
-      } else {
-        onFinish();
-      }
-    } catch (error) {
-      console.error('Error updating card:', error);
-      setError('Ошибка при обновлении карточки');
-    }
-  };
-
-  const toggleHint = () => {
-    setShowHint(!showHint);
+  const handleFinish = () => {
+    navigate(`/deck/${deckId}`);
   };
 
   const getAiExplanation = async () => {
@@ -146,7 +97,7 @@ const Review = ({ deckId, isLearningMode, onFinish }) => {
         setAiExplanation('');
         setShowDictionary(false);
       } else {
-        onFinish();
+        handleFinish();
       }
     } catch (error) {
       console.error('Error updating card:', error);
@@ -154,11 +105,76 @@ const Review = ({ deckId, isLearningMode, onFinish }) => {
     }
   };
 
+  const fetchCards = async () => {
+    setIsLoading(true);
+    try {
+      const mode = isLearningMode ? 'mixed' : 'review_only';
+      console.log('Fetching cards with mode:', mode);
+      const response = await axios.get(`review/cards/study/${deckId}`, {
+        params: { mode }
+      });
+      console.log('Server response:', response.data);
+
+      if (response.data.length > 0) {
+        setCardsToReview(response.data);
+        setShowBack(isLearningMode);
+        setHasData(true);
+      } else {
+        handleFinish();
+      }
+      setCurrentCardIndex(0);
+    } catch (error) {
+      console.error('Error fetching cards:', error);
+      if (error.response) {
+        console.error('Server error response:', error.response.data);
+        setError(`Ошибка при загрузке карточек: ${error.response.data.message || error.response.statusText}`);
+      } else if (error.request) {
+        console.error('No response received:', error.request);
+        setError('Ошибка: сервер не отвечает');
+      } else {
+        console.error('Error setting up request:', error.message);
+        setError(`Ошибка при загрузке карточек: ${error.message}`);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleNext = async () => {
+    const currentCard = cardsToReview[currentCardIndex];
+    
+    try {
+      if (isLearningMode && currentCard.mode === 'MIXED') {
+        await axios.post('review/cards', {
+          userCardId: currentCard.cardId,
+          action: 'LEARN'
+        });
+      }
+
+      if (currentCardIndex + 1 < cardsToReview.length) {
+        setCurrentCardIndex(currentCardIndex + 1);
+        setShowBack(isLearningMode && cardsToReview[currentCardIndex + 1].mode === 'MIXED');
+        setShowHint(false);
+        setAiExplanation('');
+        setShowDictionary(false);
+      } else {
+        handleFinish();
+      }
+    } catch (error) {
+      console.error('Error updating card:', error);
+      setError('Ошибка при обновлении карточки');
+    }
+  };
+
+  useEffect(() => {
+    fetchCards();
+  }, [deckId, isLearningMode]);
+
   if (isLoading) {
     return (
       <div className="review-container">
         <div className="review-header">
-          <button onClick={onFinish} className="review-back-button">
+          <button className="review-back-button" onClick={handleFinish}>
             <i className="fas fa-arrow-left"></i> Вернуться к колоде
           </button>
         </div>
@@ -167,11 +183,11 @@ const Review = ({ deckId, isLearningMode, onFinish }) => {
     );
   }
 
-  if (!hasData && !isLoading) {
+  if (!hasData) {
     return (
       <div className="review-container">
         <div className="review-header">
-          <button onClick={onFinish} className="review-back-button">
+          <button className="review-back-button" onClick={handleFinish}>
             <i className="fas fa-arrow-left"></i> Вернуться к колоде
           </button>
         </div>
@@ -183,7 +199,7 @@ const Review = ({ deckId, isLearningMode, onFinish }) => {
   return (
     <div className="review-container">
       <div className="review-content">
-        <button onClick={onFinish} className="review-back-button">
+        <button className="review-back-button" onClick={handleFinish}>
           <i className="fas fa-arrow-left"></i> Вернуться к колоде
         </button>
         
@@ -200,7 +216,7 @@ const Review = ({ deckId, isLearningMode, onFinish }) => {
                   <div className="review-card-back">{cardsToReview[currentCardIndex]?.back}</div>
                 </>
               ) : (
-                cardsToReview[currentCardIndex]?.front
+                <div className="review-card-front">{cardsToReview[currentCardIndex]?.front}</div>
               )}
             </div>
             
@@ -213,7 +229,7 @@ const Review = ({ deckId, isLearningMode, onFinish }) => {
                     className="review-hint-button" 
                     onClick={(e) => { 
                       e.stopPropagation(); 
-                      toggleHint(); 
+                      setShowHint(true); 
                     }}
                   >
                     <i className="fas fa-lightbulb"></i>
@@ -248,6 +264,7 @@ const Review = ({ deckId, isLearningMode, onFinish }) => {
                   )}
                 </>
               )}
+              
               {aiExplanation && (
                 <div className="review-ai-explanation-container">
                   <button 
@@ -263,6 +280,7 @@ const Review = ({ deckId, isLearningMode, onFinish }) => {
                   />
                 </div>
               )}
+
               {showDictionary && (
                 <div className="review-dictionary-container">
                   <button 
