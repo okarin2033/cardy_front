@@ -10,7 +10,15 @@ const CreateText = ({ onClose, onTextCreated }) => {
 
   useEffect(() => {
     fetchLanguages();
-  }, []);
+    // Добавляем обработчик клавиши Escape
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [onClose]);
 
   const fetchLanguages = async () => {
     try {
@@ -43,46 +51,55 @@ const CreateText = ({ onClose, onTextCreated }) => {
     }
   };
 
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   return (
-    <div className="create-text-form">
-      <h2>Создать новый текст</h2>
-      {error && <div className="error-message">{error}</div>}
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Название текста"
-            className="text-input"
-          />
-        </div>
-        <div className="form-group">
-          <select
-            value={language}
-            onChange={(e) => setLanguage(e.target.value)}
-            className="text-input"
-          >
-            {languages.map((lang) => (
-              <option key={lang.code} value={lang.code}>
-                {lang.value}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="form-actions">
-          <button type="submit" className="create-text-btn">
-            Создать
-          </button>
-          <button
-            type="button"
-            onClick={onClose}
-            className="cancel-text-btn"
-          >
-            Отмена
-          </button>
-        </div>
-      </form>
+    <div className="create-text-overlay" onClick={handleOverlayClick}>
+      <div className="create-text-form">
+        <h2>Создать новый текст</h2>
+        {error && <div className="error-message">{error}</div>}
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Название текста"
+              className="text-input"
+              autoFocus
+            />
+          </div>
+          <div className="form-group">
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              className="text-input"
+            >
+              {languages.map((lang) => (
+                <option key={lang.code} value={lang.code}>
+                  {lang.value}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="form-actions">
+            <button type="submit" className="create-text-btn">
+              Создать
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="cancel-text-btn"
+            >
+              Отмена
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
