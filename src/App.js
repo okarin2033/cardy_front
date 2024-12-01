@@ -34,14 +34,16 @@ const AppContent = () => {
               Главная
             </Link>
           </li>
+          {auth.isAuthenticated && (
+            <li>
+              <Link to="/texts" className={location.pathname === '/texts' ? 'active' : ''}>
+                Тексты
+              </Link>
+            </li>
+          )}
           <li>
             <Link to="/profile" className={location.pathname === '/profile' ? 'active' : ''}>
               Профиль
-            </Link>
-          </li>
-          <li>
-            <Link to="/texts" className={location.pathname === '/texts' ? 'active' : ''}>
-              Тексты
             </Link>
           </li>
         </ul>
