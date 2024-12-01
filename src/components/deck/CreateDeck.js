@@ -1,8 +1,8 @@
 // src/components/CreateDeck.js
 import React, { useState, useContext, useEffect } from 'react';
-import axios from '../axiosConfig';
-import { AuthContext } from '../context/AuthContext';
-import '../styles/common.css';
+import axios from '../../axiosConfig';
+import { AuthContext } from '../../context/AuthContext';
+import '../../styles/common.css';
 
 const CreateDeck = ({ onDeckCreated, onCancel }) => {
   const { auth } = useContext(AuthContext);

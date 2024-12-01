@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import axios from '../axiosConfig';
-import { AuthContext } from '../context/AuthContext';
-import '../styles/review.css';
+import axios from '../../axiosConfig';
+import { AuthContext } from '../../context/AuthContext';
+import '../../styles/review.css';
 
 const Review = () => {
   const { deckId } = useParams();

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactQuill from 'react-quill';
-import axios from '../axiosConfig';
-import '../styles/text.css';
+import axios from '../../axiosConfig';
+import '../../styles/text.css';
 import 'react-quill/dist/quill.snow.css';
 
 const Text = ({ text, onDelete, onUpdate }) => {

@@ -1,11 +1,11 @@
 // src/App.js
 import React, { useContext } from 'react';
 import { Routes, Route, useNavigate, Link, useLocation } from 'react-router-dom';
-import DeckList from './components/DeckList';
-import CardList from './components/CardList';
-import Review from './components/Review';
+import DeckList from './components/deck/DeckList';
+import CardList from './components/cards/CardList';
+import Review from './components/cards/Review';
 import Profile from './components/Profile';
-import TextList from './components/TextList';
+import TextList from './components/texts/TextList';
 import './App.css';
 import { AuthContext } from './context/AuthContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';

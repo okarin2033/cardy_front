@@ -1,5 +1,5 @@
 import React from 'react';
-import { SORT_OPTIONS, FILTER_OPTIONS } from '../types/cards.js';
+import { SORT_OPTIONS, FILTER_OPTIONS } from '../../types/cards.js';
 
 const CardControls = ({
   sortBy,

@@ -1,8 +1,8 @@
 // src/components/DeckList.js
 import React, { useState, useEffect, useContext } from 'react';
-import axios from '../axiosConfig';
+import axios from '../../axiosConfig';
 import CreateDeck from './CreateDeck';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext } from '../../context/AuthContext';
 
 const DeckList = ({ onSelectDeck, onReviewDeck }) => {
   const [decks, setDecks] = useState([]);

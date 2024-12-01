@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import axios from '../axiosConfig';
-import '../styles/textEditor.css';
+import axios from '../../axiosConfig';
+import '../../styles/textEditor.css';
 
 const TextEditor = ({ text, onClose, onSave }) => {
   const [title, setTitle] = useState(text?.title || '');

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axios from '../axiosConfig';
+import axios from '../../axiosConfig';
 import CreateText from './CreateText';
 import Text from './Text';
-import '../styles/text.css';
-import { formatDate } from '../utils/dateUtils';
+import '../../styles/text.css';
+import { formatDate } from '../../utils/dateUtils';
 
 function TextList() {
   const [texts, setTexts] = useState([]);

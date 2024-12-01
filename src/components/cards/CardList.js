@@ -1,12 +1,12 @@
-// src/components/CardList.js
+// src/components/cards/CardList.js
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from '../axiosConfig.js';
-import DeckNavigation from './DeckNavigation.js';
+import axios from '../../axiosConfig.js';
+import DeckNavigation from '../deck/DeckNavigation.js';
 import CardControls from './CardControls.js';
 import CardItem from './CardItem.js';
-import { SORT_OPTIONS, FILTER_OPTIONS } from '../types/cards.js';
-import '../styles/card.css';
+import { SORT_OPTIONS, FILTER_OPTIONS } from '../../types/cards.js';
+import '../../styles/card.css';
 
 const CardList = () => {
   const { deckId } = useParams();
