@@ -21,7 +21,7 @@ const CreateText = ({ onClose, onTextCreated }) => {
 
   const fetchLanguages = async () => {
     try {
-      const response = await axios.get('/api/enums/languages');
+      const response = await axios.get('/enums/languages');
       setLanguages(response.data);
     } catch (error) {
       console.error('Error fetching languages:', error);
@@ -37,7 +37,7 @@ const CreateText = ({ onClose, onTextCreated }) => {
     }
 
     try {
-      const response = await axios.post('/api/texts', {
+      const response = await axios.post('/texts', {
         title: title.trim(),
         content: '',
         language
