@@ -35,7 +35,7 @@ const Text = ({ text, onDelete, onUpdate }) => {
 
   const handleSave = async () => {
     if (!editedTitle.trim()) {
-      setError('Please enter a title');
+      setError('Пожалуйста, введите название');
       return;
     }
 
@@ -55,7 +55,7 @@ const Text = ({ text, onDelete, onUpdate }) => {
       }
     } catch (err) {
       console.error('Error saving text:', err);
-      setError('Failed to save text. Please try again.');
+      setError('Не удалось сохранить текст. Пожалуйста, попробуйте снова.');
     } finally {
       setSaving(false);
     }
@@ -78,7 +78,14 @@ const Text = ({ text, onDelete, onUpdate }) => {
 
   const getLanguageDisplay = (lang) => {
     if (!lang) return '';
-    if (typeof lang === 'string') return lang;
+    if (typeof lang === 'string') {
+      switch(lang.toLowerCase()) {
+        case 'english': return 'Английский';
+        case 'russian': return 'Русский';
+        case 'japanese': return 'Японский';
+        default: return lang;
+      }
+    }
     return lang.name || lang.code || '';
   };
 
@@ -91,7 +98,7 @@ const Text = ({ text, onDelete, onUpdate }) => {
             value={editedTitle}
             onChange={(e) => setEditedTitle(e.target.value)}
             className="title-input"
-            placeholder="Enter title"
+            placeholder="Введите название"
           />
         ) : (
           <h3>{text.title}</h3>
@@ -104,14 +111,14 @@ const Text = ({ text, onDelete, onUpdate }) => {
                 onClick={handleCancel}
                 disabled={saving}
               >
-                Cancel
+                Отмена
               </button>
               <button
                 className="save-button"
                 onClick={handleSave}
                 disabled={saving}
               >
-                {saving ? 'Saving...' : 'Save'}
+                {saving ? 'Сохранение...' : 'Сохранить'}
               </button>
             </>
           ) : (
@@ -119,7 +126,7 @@ const Text = ({ text, onDelete, onUpdate }) => {
               className="edit-button"
               onClick={handleEdit}
             >
-              Edit
+              Редактировать
             </button>
           )}
         </div>
@@ -141,14 +148,17 @@ const Text = ({ text, onDelete, onUpdate }) => {
             {text.content ? (
               <div dangerouslySetInnerHTML={{ __html: text.content }} />
             ) : (
-              <p className="no-content">No content</p>
+              <p className="no-content">Текст пока пуст</p>
             )}
           </div>
         )}
       </div>
 
       <div className="text-footer">
-        <span className="text-language">{getLanguageDisplay(text.language)}</span>
+        <span className="text-language">
+          <i className="fas fa-language"></i>
+          {getLanguageDisplay(text.language)}
+        </span>
       </div>
     </div>
   );
