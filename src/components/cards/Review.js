@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import axios from '../../axiosConfig';
-import { AuthContext } from '../../context/AuthContext';
 import '../../styles/review.css';
 
 const Review = () => {
@@ -9,7 +8,6 @@ const Review = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isLearningMode = location.pathname.includes('/learn');
-  const { auth } = useContext(AuthContext);
   
   const [cardsToReview, setCardsToReview] = useState([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -19,13 +17,13 @@ const Review = () => {
   const [aiExplanation, setAiExplanation] = useState('');
   const [isLoadingAi, setIsLoadingAi] = useState(false);
   const [showDictionary, setShowDictionary] = useState(false);
-  const [isJapaneseDeck, setIsJapaneseDeck] = useState(true);
+  const [isJapaneseDeck] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [hasData, setHasData] = useState(false);
 
-  const handleFinish = () => {
+  const handleFinish = useCallback(() => {
     navigate(`/deck/${deckId}`);
-  };
+  }, [navigate, deckId]);
 
   const getAiExplanation = async () => {
     setShowDictionary(false);
@@ -105,7 +103,7 @@ const Review = () => {
     }
   };
 
-  const fetchCards = async () => {
+  const fetchCards = useCallback(async () => {
     setIsLoading(true);
     try {
       const mode = isLearningMode ? 'mixed' : 'review_only';
@@ -114,7 +112,7 @@ const Review = () => {
         params: { mode }
       });
       console.log('Server response:', response.data);
-
+  
       if (response.data.length > 0) {
         setCardsToReview(response.data);
         setShowBack(isLearningMode);
@@ -138,7 +136,7 @@ const Review = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [deckId, isLearningMode, handleFinish]);
 
   const handleNext = async () => {
     const currentCard = cardsToReview[currentCardIndex];
@@ -168,7 +166,7 @@ const Review = () => {
 
   useEffect(() => {
     fetchCards();
-  }, [deckId, isLearningMode]);
+  }, [fetchCards]);
 
   if (isLoading) {
     return (

@@ -11,7 +11,6 @@ const Text = ({ text, onDelete, onUpdate }) => {
   const [editedContent, setEditedContent] = useState(text?.content || '');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
-  const [translating, setTranslating] = useState(false);
   const [selectedText, setSelectedText] = useState('');
   const [translationPosition, setTranslationPosition] = useState({ x: 20, y: 100 });
   const [isDragging, setIsDragging] = useState(false);
