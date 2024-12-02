@@ -198,13 +198,13 @@
   background-color: var(--ai-button-bg, #6366f1);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 0.9rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   white-space: nowrap;
 }
 
@@ -463,15 +463,22 @@
 }
 
 .translation-panel {
-  margin-top: 1rem;
+  position: fixed;
+  width: 400px;
+  max-height: calc(100vh - 140px);
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  overflow-y: auto;
   padding: 1rem;
-  border-radius: 8px;
-  background-color: var(--bg-secondary);
+  user-select: none;
+  touch-action: none;
 }
 
-.translation-panel.full-translation {
-  margin-top: 2rem;
-  border: 1px solid var(--border-color);
+.translation-panel:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .translation-header {
@@ -479,6 +486,13 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  cursor: grab;
+}
+
+.translation-header:active {
+  cursor: grabbing;
 }
 
 .translation-header h4 {
@@ -492,32 +506,61 @@
   gap: 0.5rem;
 }
 
-.translate-text-button {
-  display: inline-flex;
+.selected-text {
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  background-color: var(--bg-secondary);
+  border-radius: 6px;
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+.translate-button {
+  padding: 0.5rem 1rem;
+  background-color: var(--ai-button-bg, #6366f1);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  background-color: var(--bg-secondary);
-  color: var(--text-color);
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
-.translate-text-button:hover {
-  background-color: var(--bg-hover);
+.translate-button:hover {
+  background-color: var(--ai-button-hover-bg, #4f46e5);
 }
 
-.translate-text-button:disabled {
+.translate-button:disabled {
   opacity: 0.7;
   cursor: not-allowed;
 }
 
-.translate-text-button i {
-  font-size: 1rem;
-  color: var(--primary-color);
+.close-translation-button {
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.close-translation-button:hover {
+  background-color: var(--bg-hover);
+  color: var(--text-color);
+}
+
+.translation-panel.full-translation {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  max-width: 90vw;
 }
 
 .container {
@@ -795,4 +838,22 @@
 
 .header-actions button.primary:hover {
   background-color: var(--primary-color-dark);
+}
+
+.translation-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+.translation-loading i {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+}
+
+.translation-loading span {
+  font-size: 1.1rem;
 }

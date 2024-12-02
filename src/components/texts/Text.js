@@ -13,10 +13,15 @@ const Text = ({ text, onDelete, onUpdate }) => {
   const [error, setError] = useState('');
   const [translating, setTranslating] = useState(false);
   const [selectedText, setSelectedText] = useState('');
-  const [translation, setTranslation] = useState('');
-  const [showTranslation, setShowTranslation] = useState(false);
-  const [fullTranslation, setFullTranslation] = useState('');
-  const [translatingFull, setTranslatingFull] = useState(false);
+  const [translationPosition, setTranslationPosition] = useState({ x: 20, y: 100 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [translationPanel, setTranslationPanel] = useState({
+    visible: false,
+    mode: null, // 'selection' или 'full'
+    content: '',
+    isLoading: false
+  });
 
   useEffect(() => {
     setEditedTitle(text?.title || '');
@@ -73,8 +78,12 @@ const Text = ({ text, onDelete, onUpdate }) => {
     const selectedText = selection.toString().trim();
     if (selectedText) {
       setSelectedText(selectedText);
-      setShowTranslation(true);
-      setTranslation('');
+      setTranslationPanel(prev => ({
+        ...prev,
+        visible: true,
+        mode: 'selection',
+        content: ''
+      }));
     }
   };
 
@@ -82,7 +91,7 @@ const Text = ({ text, onDelete, onUpdate }) => {
     if (!selectedText) return;
     
     try {
-      setTranslating(true);
+      setTranslationPanel(prev => ({ ...prev, isLoading: true }));
       setError('');
       const response = await axios.get(`/api/ai/text/${text.id}/explain`, {
         params: {
@@ -90,31 +99,94 @@ const Text = ({ text, onDelete, onUpdate }) => {
           targetLanguage: 'RUSSIAN'
         }
       });
-      setTranslation(response.data);
+      
+      const formattedText = response.data
+        .split('\n')
+        .map(line => {
+          if (line.startsWith('##') && !line.startsWith('###')) {
+            return `<h2>${line.replace('##', '').trim()}</h2>`;
+          }
+          if (line.startsWith('###')) {
+            return `<h3>${line.replace('###', '').trim()}</h3>`;
+          }
+          return line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        })
+        .join('<br>');
+
+      setTranslationPanel(prev => ({
+        ...prev,
+        content: formattedText,
+        isLoading: false
+      }));
     } catch (err) {
       console.error('Error translating selection:', err);
       setError('Не удалось перевести выделенный текст');
-    } finally {
-      setTranslating(false);
+      setTranslationPanel(prev => ({ ...prev, isLoading: false }));
     }
   };
 
   const handleTranslateText = async () => {
     try {
-      setTranslatingFull(true);
+      setTranslationPanel(prev => ({
+        ...prev,
+        visible: true,
+        mode: 'full',
+        isLoading: true,
+        content: ''
+      }));
       setError('');
       const response = await axios.post(`/api/ai/text/${text.id}/translate`, null, {
         params: {
           targetLanguage: 'RUSSIAN'
         }
       });
-      setFullTranslation(response.data);
+      
+      const formattedText = response.data
+        .split('\n')
+        .map(line => {
+          if (line.startsWith('##') && !line.startsWith('###')) {
+            return `<h2>${line.replace('##', '').trim()}</h2>`;
+          }
+          if (line.startsWith('###')) {
+            return `<h3>${line.replace('###', '').trim()}</h3>`;
+          }
+          return line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        })
+        .join('<br>');
+
+      setTranslationPanel(prev => ({
+        ...prev,
+        content: formattedText,
+        isLoading: false
+      }));
     } catch (err) {
       console.error('Error translating text:', err);
       setError('Не удалось перевести текст');
-    } finally {
-      setTranslatingFull(false);
+      setTranslationPanel(prev => ({ ...prev, isLoading: false }));
     }
+  };
+
+  const handleDragStart = (e) => {
+    const panel = e.currentTarget;
+    const rect = panel.getBoundingClientRect();
+    setDragOffset({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    });
+    setIsDragging(true);
+  };
+
+  const handleDrag = (e) => {
+    if (isDragging && e.clientX && e.clientY) {
+      setTranslationPosition({
+        x: e.clientX - dragOffset.x,
+        y: e.clientY - dragOffset.y
+      });
+    }
+  };
+
+  const handleDragEnd = () => {
+    setIsDragging(false);
   };
 
   const modules = {
@@ -162,10 +234,10 @@ const Text = ({ text, onDelete, onUpdate }) => {
             <button
               className="translate-text-button"
               onClick={handleTranslateText}
-              disabled={translatingFull}
+              disabled={translationPanel.isLoading}
             >
               <i className="fas fa-language"></i>
-              {translatingFull ? 'Перевод...' : 'Перевести текст'}
+              {translationPanel.isLoading ? 'Перевод...' : 'Перевести текст'}
             </button>
           </div>
         )}
@@ -223,55 +295,59 @@ const Text = ({ text, onDelete, onUpdate }) => {
         )}
       </div>
 
-      {showTranslation && selectedText && (
-        <div className="translation-panel">
+      {translationPanel.visible && (
+        <div 
+          className="translation-panel"
+          style={{
+            left: `${translationPosition.x}px`,
+            top: `${translationPosition.y}px`,
+            cursor: isDragging ? 'grabbing' : 'grab'
+          }}
+          onMouseDown={handleDragStart}
+          onMouseMove={handleDrag}
+          onMouseUp={handleDragEnd}
+          onMouseLeave={handleDragEnd}
+        >
           <div className="translation-header">
-            <h4>Выделенный текст:</h4>
+            <h4>{translationPanel.mode === 'selection' ? 'Выделенный текст' : 'Перевод текста'}</h4>
             <div className="translation-actions">
-              <button
-                className="translate-button"
-                onClick={handleTranslateSelection}
-                disabled={translating}
-              >
-                <i className="fas fa-language"></i>
-                {translating ? 'Перевод...' : 'Перевести'}
-              </button>
+              {translationPanel.mode === 'selection' && (
+                <button
+                  className="translate-button"
+                  onClick={handleTranslateSelection}
+                  disabled={translationPanel.isLoading}
+                >
+                  <i className="fas fa-language"></i>
+                  {translationPanel.isLoading ? 'Перевод...' : 'Перевести'}
+                </button>
+              )}
               <button
                 className="close-translation-button"
                 onClick={() => {
-                  setShowTranslation(false);
-                  setTranslation('');
+                  setTranslationPanel(prev => ({ ...prev, visible: false }));
+                  setSelectedText('');
                 }}
               >
                 <i className="fas fa-times"></i>
               </button>
             </div>
           </div>
-          <p className="selected-text">{selectedText}</p>
-          <AIResponse 
-            content={translation}
-            isLoading={translating}
-            error={error}
-          />
-        </div>
-      )}
 
-      {fullTranslation && (
-        <div className="translation-panel full-translation">
-          <div className="translation-header">
-            <h4>Перевод текста:</h4>
-            <button
-              className="close-translation-button"
-              onClick={() => setFullTranslation('')}
-            >
-              <i className="fas fa-times"></i>
-            </button>
-          </div>
-          <AIResponse 
-            content={fullTranslation}
-            isLoading={translatingFull}
-            error={error}
-          />
+          {translationPanel.mode === 'selection' && (
+            <p className="selected-text">{selectedText}</p>
+          )}
+
+          {translationPanel.isLoading ? (
+            <div className="translation-loading">
+              <i className="fas fa-spinner fa-spin"></i>
+              <span>Получаем перевод...</span>
+            </div>
+          ) : (
+            <AIResponse 
+              content={translationPanel.content}
+              error={error}
+            />
+          )}
         </div>
       )}
 
