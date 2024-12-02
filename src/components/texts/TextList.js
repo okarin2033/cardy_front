@@ -90,11 +90,12 @@ function TextList() {
       <div className="text-navigation">
         <div className="text-header">
           <h2>Тексты</h2>
-          <button 
-            onClick={() => setIsCreating(true)} 
+          <button
             className="create-text-btn"
+            onClick={() => setIsCreating(true)}
+            title="Добавить текст"
           >
-            <i className="fas fa-plus"></i> Добавить текст
+            <i className="fas fa-plus"></i>
           </button>
         </div>
         {error && <div className="error-message">

@@ -1,0 +1,55 @@
+.ai-response {
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: var(--bg-secondary);
+  margin: 1rem 0;
+}
+
+.ai-response.loading,
+.ai-response.error {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  color: var(--text-secondary);
+}
+
+.ai-response.error {
+  color: var(--error-color);
+  background-color: var(--error-background);
+}
+
+.ai-content {
+  line-height: 1.6;
+  color: var(--text-color);
+}
+
+.ai-content h2 {
+  font-size: 1.25rem;
+  margin: 1rem 0 0.5rem;
+  color: var(--primary-color);
+}
+
+.ai-content h3 {
+  font-size: 1.1rem;
+  margin: 0.75rem 0 0.5rem;
+  color: var(--text-color);
+}
+
+.ai-content strong {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.ai-content p {
+  margin: 0.5rem 0;
+}
+
+.ai-content ul, .ai-content ol {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.ai-content li {
+  margin: 0.25rem 0;
+}
