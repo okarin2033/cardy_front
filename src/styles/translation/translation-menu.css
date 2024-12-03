@@ -1,50 +1,182 @@
 .translation-menu {
-  position: fixed;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  padding: 12px 16px;
+  position: absolute;
+  background: var(--background-color, #fff);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   min-width: 200px;
-  max-width: 300px;
+  max-width: 320px;
   z-index: 1000;
-  font-size: 14px;
-  border: 1px solid #eee;
-  animation: fadeIn 0.2s ease-in-out;
+  font-size: 12px;
+  animation: menuAppear 0.2s ease;
+}
+
+.translation-menu::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 20px;
+  width: 12px;
+  height: 12px;
+  background: var(--background-color, white);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: none;
+  border-bottom: none;
+  transform: rotate(45deg);
+}
+
+.translation-content {
+  padding: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.text-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 4px;
+  min-height: 22px;
+  border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+}
+
+.text-row:last-child {
+  border-bottom: none;
+}
+
+.text-content {
+  color: var(--text-color, #333);
+  font-weight: 500;
+  flex: 1;
+  margin-right: 4px;
+  font-size: 12px;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.language-select {
+  background: var(--background-color);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-color);
+  padding: 0 4px;
+  border-radius: 2px;
+  font-size: 11px;
+  cursor: pointer;
+  outline: none;
+  width: 90px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.language-select option {
+  background: var(--background-color);
+  color: var(--text-color);
+  padding: 2px;
+}
+
+.translation-actions {
+  display: flex;
+  gap: 4px;
+  padding: 2px 4px;
+  border-top: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  justify-content: center;
+}
+
+.translation-action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 2px 6px;
+  border: none;
+  border-radius: 2px;
+  background: var(--button-background, rgba(255, 255, 255, 0.1));
+  color: var(--text-color);
+  cursor: pointer;
+  font-size: 11px;
+  height: 20px;
+  min-width: 80px;
+}
+
+.translation-action-button:hover {
+  background: var(--button-hover-background, rgba(255, 255, 255, 0.2));
+}
+
+.translation-action-button svg {
+  width: 12px;
+  height: 12px;
 }
 
 .translation-loading {
-  color: #666;
-  padding: 8px 0;
+  padding: 8px;
+  text-align: center;
+  color: var(--text-color);
+  font-size: 12px;
+}
+
+.translation-loading::after {
+  content: '';
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--primary-color, #2196f3);
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.original-word {
+  color: var(--text-color, #333);
+  font-weight: 500;
+  padding: 12px 16px;
+  background: var(--background-secondary, rgba(0, 0, 0, 0.02));
+  border-radius: 8px 8px 0 0;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 8px;
 }
 
-.translation-content {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.original-word {
-  color: #333;
-  font-weight: 500;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #eee;
-}
-
 .translation-text {
-  color: #666;
-  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.5;
+  padding: 12px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 500;
 }
 
-@keyframes fadeIn {
+/* Для светлой темы */
+@media (prefers-color-scheme: light) {
+  .translation-text {
+    color: var(--text-color, #333);
+  }
+}
+
+/* Для светлой темы */
+@media (prefers-color-scheme: light) {
+  .translation-action-button {
+    color: var(--text-color-secondary, #666);
+  }
+}
+
+@keyframes menuAppear {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(4px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
