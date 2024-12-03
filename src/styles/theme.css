@@ -3,6 +3,10 @@
   --text-color: #333333;
   --nav-bg: #343a40;
   --nav-text: #ffffff;
+  --nav-hover: rgba(255, 255, 255, 0.1);
+  --nav-active: rgba(255, 255, 255, 0.15);
+  --nav-button: rgba(255, 255, 255, 0.1);
+  --nav-button-hover: rgba(255, 255, 255, 0.2);
   --card-bg: #ffffff;
   --container-bg: #f8f9fa;
   --button-bg: #487eb0;
@@ -54,6 +58,10 @@
   --text-color: #f5f6fa;
   --nav-bg: #20242d;
   --nav-text: #f5f6fa;
+  --nav-hover: rgba(255, 255, 255, 0.1);
+  --nav-active: rgba(255, 255, 255, 0.15);
+  --nav-button: rgba(255, 255, 255, 0.1);
+  --nav-button-hover: rgba(255, 255, 255, 0.2);
   --card-bg: #242832;
   --container-bg: #1e2229;
   --button-bg: #487eb0;

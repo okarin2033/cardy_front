@@ -82,8 +82,8 @@
 .create-text-btn::after {
   content: "Добавить текст";
   position: absolute;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
+  background-color: var(--tooltip-background);
+  color: var(--tooltip-text);
   padding: 0.4rem 0.8rem;
   border-radius: 4px;
   font-size: 0.85rem;
@@ -195,8 +195,8 @@
 
 .translate-text-button {
   padding: 0.5rem 1rem;
-  background-color: var(--ai-button-bg, #6366f1);
-  color: white;
+  background-color: var(--ai-button-bg);
+  color: var(--button-text);
   border: none;
   border-radius: 6px;
   cursor: pointer;

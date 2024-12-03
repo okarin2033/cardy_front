@@ -29,7 +29,7 @@ input[type="email"]:focus,
 textarea:focus {
   outline: none;
   border-color: var(--deck-nav-button);
-  box-shadow: 0 0 0 2px rgba(72, 126, 176, 0.2);
+  box-shadow: 0 0 0 2px var(--primary-color-transparent);
 }
 
 /* Layout containers */
@@ -58,9 +58,9 @@ textarea:focus {
 
 /* Error messages */
 .error-message {
-  color: #dc3545;
+  color: var(--error-color);
   margin: 10px 0;
   padding: 10px;
-  background-color: #f8d7da;
+  background-color: var(--error-bg);
   border-radius: 6px;
 }

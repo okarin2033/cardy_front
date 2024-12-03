@@ -55,11 +55,11 @@
 }
 
 .navbar li a:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--nav-hover);
 }
 
 .navbar li a.active {
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: var(--nav-active);
 }
 
 .theme-toggle {
@@ -76,7 +76,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--nav-button);
   border: none;
   border-radius: 50%;
   cursor: pointer;
@@ -85,6 +85,6 @@
 }
 
 .theme-toggle button:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: var(--nav-button-hover);
   transform: rotate(15deg);
 }
