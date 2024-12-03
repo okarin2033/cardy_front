@@ -1,6 +1,6 @@
 .text-panel {
   padding: 16px;
-  color: #333;
+  color: var(--text-color);
 }
 
 .text-panel h3 {
@@ -16,9 +16,10 @@
 }
 
 .selected-content {
-  background: #f5f5f5;
-  padding: 12px;
+  background: var(--background-secondary);
+  padding: 16px;
   border-radius: 8px;
+  border: 1px solid var(--border-color);
 }
 
 .selected-content h4 {
@@ -29,25 +30,39 @@
 
 .selected-content p {
   margin: 0;
-  font-size: 14px;
-  line-height: 1.4;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text-color);
 }
 
-.test-buttons {
+.action-buttons {
   display: flex;
-  gap: 8px;
+  gap: 12px;
 }
 
 .panel-button {
-  padding: 8px 16px;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  background: var(--background-color);
+  color: var(--text-color);
+  border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
 .panel-button:hover {
-  background: #0056b3;
+  background: var(--background-secondary);
+}
+
+.panel-button.primary {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+}
+
+.panel-button.primary:hover {
+  opacity: 0.9;
 }

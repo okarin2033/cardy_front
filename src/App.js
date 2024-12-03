@@ -50,29 +50,31 @@ const AppContent = () => {
         </ul>
       </nav>
 
-      <Routes>
-        <Route
-          path="/"
-          element={
-            auth.isAuthenticated ? (
-              <DeckList
-                onSelectDeck={(deckId) => navigate(`/deck/${deckId}`)}
-                onReviewDeck={(deckId) => navigate(`/deck/${deckId}/review`)}
-                onLearnDeck={(deckId) => navigate(`/deck/${deckId}/learn`)}
-              />
-            ) : (
-              <div className="welcome-message">
-                <h2>Добро пожаловать! Пожалуйста, войдите или зарегистрируйтесь.</h2>
-              </div>
-            )
-          }
-        />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/texts" element={<TextList />} />
-        <Route path="/deck/:deckId" element={<CardList />} />
-        <Route path="/deck/:deckId/review" element={<Review />} />
-        <Route path="/deck/:deckId/learn" element={<Review />} />
-      </Routes>
+      <div className="app-content">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              auth.isAuthenticated ? (
+                <DeckList
+                  onSelectDeck={(deckId) => navigate(`/deck/${deckId}`)}
+                  onReviewDeck={(deckId) => navigate(`/deck/${deckId}/review`)}
+                  onLearnDeck={(deckId) => navigate(`/deck/${deckId}/learn`)}
+                />
+              ) : (
+                <div className="welcome-message">
+                  <h2>Добро пожаловать! Пожалуйста, войдите или зарегистрируйтесь.</h2>
+                </div>
+              )
+            }
+          />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/texts" element={<TextList />} />
+          <Route path="/deck/:deckId" element={<CardList />} />
+          <Route path="/deck/:deckId/review" element={<Review />} />
+          <Route path="/deck/:deckId/learn" element={<Review />} />
+        </Routes>
+      </div>
     </div>
   );
 };
