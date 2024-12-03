@@ -1,10 +1,10 @@
-import axios from 'axios';
+import axios from '../axiosConfig';
 
 const API_URL = 'http://localhost:8080/v1';
 
 export const translateWord = async (word, language) => {
   try {
-    const response = await axios.get(`${API_URL}/translate`, {
+    const response = await axios.get('/translate', {
       params: {
         text: word,
         sourceLang: 'JAPANESE',

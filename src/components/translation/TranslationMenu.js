@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from '../../axiosConfig';
+import { translateWord } from '../../services/translationService';
 import '../../styles/translation/translation-menu.css';
 
 const TranslationMenu = ({ word, position, onClose }) => {
@@ -10,14 +10,8 @@ const TranslationMenu = ({ word, position, onClose }) => {
     const fetchTranslation = async () => {
       if (word) {
         try {
-          const response = await axios.get('/translate', {
-            params: {
-              text: word,
-              sourceLang: 'JAPANESE',
-              targetLang: 'RUSSIAN'
-            }
-          });
-          setTranslation(response.data[0] || 'Перевод не найден');
+          const result = await translateWord(word, 'RUSSIAN');
+          setTranslation(result && result[0] ? result[0] : 'Перевод не найден');
         } catch (error) {
           console.error('Translation error:', error);
           setTranslation('Ошибка перевода');
