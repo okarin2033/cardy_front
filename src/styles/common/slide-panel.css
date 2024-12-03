@@ -1,12 +1,46 @@
-/* Контейнер для основного контента */
-.app-content {
-  transition: margin-right 0.3s ease;
-  width: 100%;
-  position: relative;
+:root {
+  --panel-width: 400px;
+  --panel-min-width: 280px;
+  --panel-max-width: 800px;
+  --container-bg: white;
+  --text-primary: #333;
+  --text-secondary: #666;
+  --shadow-color: -2px 0 8px rgba(0, 0, 0, 0.1);
+  --hover-color: rgba(0, 0, 0, 0.05);
+  --border-color: rgba(0, 0, 0, 0.1);
+  --bg-color: var(--container-bg);
+  --heading-color: var(--text-primary);
+  --content-background: var(--container-bg);
+  --scrollbar-track: rgba(0, 0, 0, 0.05);
+  --scrollbar-thumb: rgba(0, 0, 0, 0.2);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.3);
 }
 
-.app-content.panel-open {
-  margin-right: 380px; /* Ширина панели */
+/* Контейнер для основного контента */
+.app-content {
+  transition: all 0.3s ease;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  min-height: 100vh;
+  padding: 0 20px;
+}
+
+/* Контейнер для панели */
+.slide-panel-wrapper {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 0;
+  height: 100vh;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.slide-panel-wrapper.open {
+  width: 100%;
+  pointer-events: none;
 }
 
 /* Стили для панели */
@@ -14,57 +48,78 @@
   position: fixed;
   top: 0;
   right: 0;
-  width: 380px;
   height: 100vh;
-  background: var(--background-color);
-  color: var(--text-color);
-  box-shadow: var(--shadow-color, -2px 0 10px rgba(0, 0, 0, 0.1));
+  background: var(--container-bg);
+  box-shadow: var(--shadow-color, -2px 0 8px rgba(0, 0, 0, 0.1));
   transform: translateX(100%);
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease;
   z-index: 1000;
   display: flex;
   flex-direction: column;
-  border-left: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
+  color: var(--text-primary);
+  pointer-events: auto;
 }
 
 .slide-panel.open {
   transform: translateX(0);
 }
 
+/* Стили для изменения размера панели */
+.slide-panel-resize {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  cursor: col-resize;
+  background: transparent;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+.slide-panel-resize:hover {
+  background: var(--hover-color, rgba(0, 0, 0, 0.05));
+}
+
+/* Стили для заголовка панели */
 .slide-panel-header {
-  padding: 16px;
-  border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  background: var(--header-background, var(--background-color));
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-color);
 }
 
 .slide-panel-header h2 {
   margin: 0;
-  font-size: 1.2em;
-  color: var(--heading-color, var(--text-color));
+  font-size: 18px;
+  color: var(--text-primary);
 }
 
 .slide-panel-close {
   background: none;
   border: none;
-  color: var(--text-color);
-  cursor: pointer;
   padding: 8px;
-  border-radius: 4px;
-  transition: background-color 0.2s;
+  cursor: pointer;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
 }
 
 .slide-panel-close:hover {
-  background-color: var(--hover-color, rgba(0, 0, 0, 0.05));
+  color: var(--text-primary);
 }
 
+/* Контент панели */
 .slide-panel-content {
   flex: 1;
-  padding: 20px;
   overflow-y: auto;
-  background: var(--content-background, var(--background-color));
+  padding: 16px;
+  background: var(--container-bg);
+  pointer-events: auto;
 }
 
 /* Стили для скролла */
@@ -85,49 +140,23 @@
   background: var(--scrollbar-thumb-hover, rgba(0, 0, 0, 0.3));
 }
 
-/* Адаптивность для мобильных устройств */
-@media (max-width: 768px) {
-  .slide-panel {
+/* Адаптивные стили */
+@media screen and (max-width: 1024px) {
+  :root {
+    --panel-width: 350px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  :root {
+    --panel-width: 100%;
+  }
+
+  .slide-panel-wrapper.open {
     width: 100%;
   }
 
-  .app-content.panel-open {
-    margin-right: 0;
+  .slide-panel {
+    width: 100%;
   }
-}
-
-/* Стили для контента внутри панели */
-.translation-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.translation-panel h3 {
-  margin: 0;
-  color: #333;
-  font-size: 18px;
-}
-
-.selected-text,
-.translation-result {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.selected-text strong,
-.translation-result strong {
-  color: #666;
-  font-size: 14px;
-}
-
-.selected-text p,
-.translation-result p {
-  margin: 0;
-  padding: 12px;
-  background: #f5f5f5;
-  border-radius: 4px;
-  font-size: 14px;
-  line-height: 1.4;
 }
