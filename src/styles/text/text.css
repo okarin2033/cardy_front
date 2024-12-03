@@ -1,0 +1,431 @@
+.text-container {
+  display: flex;
+  height: calc(100vh - 120px);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+  position: relative;
+}
+
+.text-content-area {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: auto;
+  padding: 2rem;
+  background-color: var(--background-color);
+  display: flex;
+  flex-direction: column;
+  border-radius: 0 12px 12px 0;
+  position: relative;
+}
+
+.text-header-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.text-header-content h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--text-color);
+}
+
+.translate-text-button {
+  padding: 0.5rem 1rem;
+  background-color: var(--ai-button-bg);
+  color: var(--button-text);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.translate-text-button:hover {
+  background-color: var(--ai-button-hover-bg, #4f46e5);
+  transform: translateY(-1px);
+}
+
+.translate-text-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.translate-text-button i {
+  font-size: 1rem;
+}
+
+.text-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.edit-button {
+  padding: 0.5rem 1rem;
+  background-color: var(--bg-secondary);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.edit-button:hover {
+  background-color: var(--bg-hover);
+}
+
+.text-card {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.text-card .text-header {
+  padding: 1.5rem;
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.text-card .text-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.text-card .title-input {
+  font-size: 1.5rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.text-card .title-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px var(--primary-color-transparent);
+}
+
+.text-card .text-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.text-card .edit-button,
+.text-card .save-button,
+.text-card .cancel-button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.text-card .edit-button {
+  background-color: var(--button-primary);
+  color: white;
+}
+
+.text-card .edit-button:hover {
+  background-color: var(--button-primary-hover);
+  transform: translateY(-1px);
+}
+
+.text-card .save-button {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.text-card .save-button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.text-card .cancel-button {
+  background-color: var(--bg-secondary);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.text-card .cancel-button:hover {
+  background-color: var(--border-color);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.text-card .text-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Стили для QuillJS редактора */
+.ql-container {
+  border-radius: 0 0 12px 12px !important;
+  font-family: inherit !important;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.ql-toolbar {
+  border-radius: 12px 12px 0 0 !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  background-color: var(--bg-secondary) !important;
+}
+
+.ql-editor {
+  border-radius: 0 0 12px 12px;
+  background-color: var(--background-color);
+  min-height: 200px !important;
+  flex: 1;
+  overflow-y: auto !important;
+}
+
+.text-card .ql-toolbar {
+  border: none;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  padding: 1rem;
+}
+
+.text-card .ql-toolbar button {
+  color: var(--text-color);
+}
+
+.text-card .ql-toolbar button:hover {
+  color: var(--primary-color);
+}
+
+.text-card .ql-toolbar .ql-stroke {
+  stroke: var(--text-color);
+}
+
+.text-card .ql-toolbar .ql-fill {
+  fill: var(--text-color);
+}
+
+.text-card .ql-toolbar button:hover .ql-stroke {
+  stroke: var(--primary-color);
+}
+
+.text-card .ql-toolbar button:hover .ql-fill {
+  fill: var(--primary-color);
+}
+
+.text-card .ql-editor {
+  padding: 1.5rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--text-color);
+}
+
+.text-card .ql-editor p {
+  margin-bottom: 1rem;
+}
+
+.text-card .text-content .no-content {
+  color: var(--text-secondary);
+  font-style: italic;
+  text-align: center;
+  padding: 2rem;
+}
+
+.text-card .text-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem 1.5rem;
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+}
+
+.text-card .text-language {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.text-card .text-language i {
+  font-size: 1.1rem;
+  opacity: 0.7;
+}
+
+/* Стили для панели перевода */
+.translation-panel {
+  position: fixed;
+  width: 400px;
+  max-height: calc(100vh - 140px);
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 1rem;
+  user-select: none;
+  touch-action: none;
+}
+
+.translation-panel:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.translation-panel.full-translation {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  max-width: 90vw;
+}
+
+.translation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  cursor: grab;
+}
+
+.translation-header:active {
+  cursor: grabbing;
+}
+
+.translation-header h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--text-color);
+}
+
+.translation-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.selected-text {
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  background-color: var(--bg-secondary);
+  border-radius: 6px;
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+.translate-button {
+  padding: 0.5rem 1rem;
+  background-color: var(--ai-button-bg, #6366f1);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.translate-button:hover {
+  background-color: var(--ai-button-hover-bg, #4f46e5);
+}
+
+.translate-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.close-translation-button {
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.close-translation-button:hover {
+  background-color: var(--bg-hover);
+  color: var(--text-color);
+}
+
+.translation-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+.translation-loading i {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+}
+
+.translation-loading span {
+  font-size: 1.1rem;
+}
+
+/* Стилизация скроллбара для редактора */
+.ql-editor::-webkit-scrollbar {
+  width: 8px;
+}
+
+.ql-editor::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.ql-editor::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 10px;
+  border: 2px solid var(--background-color);
+}
+
+.ql-editor::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}

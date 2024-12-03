@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import axios from '../../axiosConfig';
 import AIResponse from '../common/AIResponse';
-import '../../styles/text.css';
+import '../../styles/text/text.css';
 import 'react-quill/dist/quill.snow.css';
 
 const Text = ({ text, onDelete, onUpdate }) => {
@@ -242,7 +242,7 @@ const Text = ({ text, onDelete, onUpdate }) => {
         )}
         <div className="text-actions">
           {isEditing ? (
-            <>
+            <React.Fragment>
               <button
                 className="cancel-button"
                 onClick={handleCancel}
@@ -257,7 +257,7 @@ const Text = ({ text, onDelete, onUpdate }) => {
               >
                 {saving ? 'Сохранение...' : 'Сохранить'}
               </button>
-            </>
+            </React.Fragment>
           ) : (
             <button
               className="edit-button"

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from '../../axiosConfig';
 import CreateText from './CreateText';
 import Text from './Text';
-import '../../styles/text.css';
+import '../../styles/text/text-list.css';
 import { formatDate } from '../../utils/dateUtils';
 
 function TextList() {

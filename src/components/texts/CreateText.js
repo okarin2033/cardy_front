@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../../axiosConfig';
-import '../../styles/common.css';
+import '../../styles/text/create-text.css';
 
 const CreateText = ({ onClose, onTextCreated }) => {
   const [title, setTitle] = useState('');
