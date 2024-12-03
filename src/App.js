@@ -9,6 +9,7 @@ import TextList from './components/texts/TextList';
 import './App.css';
 import { AuthContext } from './context/AuthContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
+import { SlidePanelProvider } from './context/SlidePanelContext';
 
 const AppContent = () => {
   const { auth } = useContext(AuthContext);
@@ -79,7 +80,9 @@ const AppContent = () => {
 const App = () => {
   return (
     <ThemeProvider>
-      <AppContent />
+      <SlidePanelProvider>
+        <AppContent />
+      </SlidePanelProvider>
     </ThemeProvider>
   );
 };

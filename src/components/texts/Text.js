@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import ReactQuill from 'react-quill';
 import axios from '../../axiosConfig';
 import AIResponse from '../common/AIResponse';
+import TranslationMenu from '../translation/TranslationMenu';
+import TextPanel from './TextPanel';
+import { useSlidePanel } from '../../context/SlidePanelContext';
 import '../../styles/text/text.css';
 import 'react-quill/dist/quill.snow.css';
 
@@ -12,15 +15,9 @@ const Text = ({ text, onDelete, onUpdate }) => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [selectedText, setSelectedText] = useState('');
-  const [translationPosition, setTranslationPosition] = useState({ x: 20, y: 100 });
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [translationPanel, setTranslationPanel] = useState({
-    visible: false,
-    mode: null, // 'selection' или 'full'
-    content: '',
-    isLoading: false
-  });
+  const [selectedWord, setSelectedWord] = useState('');
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+  const { openPanel, closePanel } = useSlidePanel();
 
   useEffect(() => {
     setEditedTitle(text?.title || '');
@@ -72,121 +69,29 @@ const Text = ({ text, onDelete, onUpdate }) => {
     }
   };
 
-  const handleTextSelection = () => {
+  const handleTextSelection = useCallback((event) => {
     const selection = window.getSelection();
     const selectedText = selection.toString().trim();
+
     if (selectedText) {
+      const range = selection.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+      
       setSelectedText(selectedText);
-      setTranslationPanel(prev => ({
-        ...prev,
-        visible: true,
-        mode: 'selection',
-        content: ''
-      }));
-    }
-  };
-
-  const handleTranslateSelection = async () => {
-    if (!selectedText) return;
-    
-    try {
-      setTranslationPanel(prev => ({ ...prev, isLoading: true }));
-      setError('');
-      const response = await axios.get(`/api/ai/text/${text.id}/explain`, {
-        params: {
-          sentence: selectedText,
-          targetLanguage: 'RUSSIAN'
-        }
+      setSelectedWord(selectedText);
+      setMenuPosition({
+        x: rect.left + window.scrollX,
+        y: rect.bottom + window.scrollY + 5
       });
-      
-      const formattedText = response.data
-        .split('\n')
-        .map(line => {
-          if (line.startsWith('##') && !line.startsWith('###')) {
-            return `<h2>${line.replace('##', '').trim()}</h2>`;
-          }
-          if (line.startsWith('###')) {
-            return `<h3>${line.replace('###', '').trim()}</h3>`;
-          }
-          return line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        })
-        .join('<br>');
 
-      setTranslationPanel(prev => ({
-        ...prev,
-        content: formattedText,
-        isLoading: false
-      }));
-    } catch (err) {
-      console.error('Error translating selection:', err);
-      setError('Не удалось перевести выделенный текст');
-      setTranslationPanel(prev => ({ ...prev, isLoading: false }));
+      // Открываем панель с тестовым компонентом
+      openPanel(<TextPanel selectedText={selectedText} />);
+    } else {
+      setSelectedText('');
+      setSelectedWord('');
+      closePanel();
     }
-  };
-
-  const handleTranslateText = async () => {
-    try {
-      setTranslationPanel(prev => ({
-        ...prev,
-        visible: true,
-        mode: 'full',
-        isLoading: true,
-        content: ''
-      }));
-      setError('');
-      const response = await axios.post(`/api/ai/text/${text.id}/translate`, null, {
-        params: {
-          targetLanguage: 'RUSSIAN'
-        }
-      });
-      
-      const formattedText = response.data
-        .split('\n')
-        .map(line => {
-          if (line.startsWith('##') && !line.startsWith('###')) {
-            return `<h2>${line.replace('##', '').trim()}</h2>`;
-          }
-          if (line.startsWith('###')) {
-            return `<h3>${line.replace('###', '').trim()}</h3>`;
-          }
-          return line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        })
-        .join('<br>');
-
-      setTranslationPanel(prev => ({
-        ...prev,
-        content: formattedText,
-        isLoading: false
-      }));
-    } catch (err) {
-      console.error('Error translating text:', err);
-      setError('Не удалось перевести текст');
-      setTranslationPanel(prev => ({ ...prev, isLoading: false }));
-    }
-  };
-
-  const handleDragStart = (e) => {
-    const panel = e.currentTarget;
-    const rect = panel.getBoundingClientRect();
-    setDragOffset({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
-    });
-    setIsDragging(true);
-  };
-
-  const handleDrag = (e) => {
-    if (isDragging && e.clientX && e.clientY) {
-      setTranslationPosition({
-        x: e.clientX - dragOffset.x,
-        y: e.clientY - dragOffset.y
-      });
-    }
-  };
-
-  const handleDragEnd = () => {
-    setIsDragging(false);
-  };
+  }, [openPanel, closePanel]);
 
   const modules = {
     toolbar: [
@@ -230,14 +135,6 @@ const Text = ({ text, onDelete, onUpdate }) => {
         ) : (
           <div className="text-header-content">
             <h3>{text.title}</h3>
-            <button
-              className="translate-text-button"
-              onClick={handleTranslateText}
-              disabled={translationPanel.isLoading}
-            >
-              <i className="fas fa-language"></i>
-              {translationPanel.isLoading ? 'Перевод...' : 'Перевести текст'}
-            </button>
           </div>
         )}
         <div className="text-actions">
@@ -294,60 +191,12 @@ const Text = ({ text, onDelete, onUpdate }) => {
         )}
       </div>
 
-      {translationPanel.visible && (
-        <div 
-          className="translation-panel"
-          style={{
-            left: `${translationPosition.x}px`,
-            top: `${translationPosition.y}px`,
-            cursor: isDragging ? 'grabbing' : 'grab'
-          }}
-          onMouseDown={handleDragStart}
-          onMouseMove={handleDrag}
-          onMouseUp={handleDragEnd}
-          onMouseLeave={handleDragEnd}
-        >
-          <div className="translation-header">
-            <h4>{translationPanel.mode === 'selection' ? 'Выделенный текст' : 'Перевод текста'}</h4>
-            <div className="translation-actions">
-              {translationPanel.mode === 'selection' && (
-                <button
-                  className="translate-button"
-                  onClick={handleTranslateSelection}
-                  disabled={translationPanel.isLoading}
-                >
-                  <i className="fas fa-language"></i>
-                  {translationPanel.isLoading ? 'Перевод...' : 'Перевести'}
-                </button>
-              )}
-              <button
-                className="close-translation-button"
-                onClick={() => {
-                  setTranslationPanel(prev => ({ ...prev, visible: false }));
-                  setSelectedText('');
-                }}
-              >
-                <i className="fas fa-times"></i>
-              </button>
-            </div>
-          </div>
-
-          {translationPanel.mode === 'selection' && (
-            <p className="selected-text">{selectedText}</p>
-          )}
-
-          {translationPanel.isLoading ? (
-            <div className="translation-loading">
-              <i className="fas fa-spinner fa-spin"></i>
-              <span>Получаем перевод...</span>
-            </div>
-          ) : (
-            <AIResponse 
-              content={translationPanel.content}
-              error={error}
-            />
-          )}
-        </div>
+      {selectedWord && (
+        <TranslationMenu
+          word={selectedWord}
+          position={menuPosition}
+          onClose={() => setSelectedWord('')}
+        />
       )}
 
       <div className="text-footer">

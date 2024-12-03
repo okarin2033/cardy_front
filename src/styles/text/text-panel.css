@@ -1,0 +1,53 @@
+.text-panel {
+  padding: 16px;
+  color: #333;
+}
+
+.text-panel h3 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.text-panel-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.selected-content {
+  background: #f5f5f5;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.selected-content h4 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.selected-content p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.test-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.panel-button {
+  padding: 8px 16px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.panel-button:hover {
+  background: #0056b3;
+}
