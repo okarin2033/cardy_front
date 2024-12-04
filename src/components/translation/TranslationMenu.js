@@ -1,139 +1,205 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { translateWord, getSupportedLanguages, LANGUAGES } from '../../services/translationService';
 import { useUserSettings } from '../../hooks/useUserSettings';
 import '../../styles/translation/translation-menu.css';
 
-const TranslationMenu = ({ word, position, textLanguage = LANGUAGES.JAPANESE }) => {
+const TranslationMenu = ({ word, position, textLanguage = LANGUAGES.JAPANESE, onClose, onShowDetails }) => {
+  console.log('Initial textLanguage:', textLanguage);
+  
   const [translation, setTranslation] = useState('');
   const [loading, setLoading] = useState(true);
-  const [sourceLang, setSourceLang] = useState(textLanguage);
+  const [sourceLang, setSourceLang] = useState(LANGUAGES.JAPANESE);
   const [targetLang, setTargetLang] = useState(LANGUAGES.RUSSIAN);
+  const [showSourceLangMenu, setShowSourceLangMenu] = useState(false);
+  const [showTargetLangMenu, setShowTargetLangMenu] = useState(false);
   const [languages, setLanguages] = useState([]);
-  const userSettings = useUserSettings();
+  const [showDetails, setShowDetails] = useState(false);
+  const menuRef = useRef(null);
+  const { settings } = useUserSettings();
 
   useEffect(() => {
-    const loadLanguages = async () => {
-      const supportedLangs = await getSupportedLanguages();
-      setLanguages(supportedLangs);
-    };
-    loadLanguages();
-  }, []);
-
-  useEffect(() => {
-    setTargetLang(userSettings.targetLanguage);
-  }, [userSettings.targetLanguage]);
-
-  useEffect(() => {
-    setSourceLang(textLanguage);
-  }, [textLanguage]);
-
-  useEffect(() => {
-    const fetchTranslation = async () => {
-      if (word) {
-        try {
-          const result = await translateWord(word, targetLang, sourceLang);
-          setTranslation(result && result[0] ? result[0] : 'Перевод не найден');
-        } catch (error) {
-          console.error('Translation error:', error);
-          setTranslation('Ошибка перевода');
-        } finally {
-          setLoading(false);
-        }
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        onClose();
       }
     };
 
-    setLoading(true);
-    fetchTranslation();
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [onClose]);
+
+  useEffect(() => {
+    const fetchLanguages = async () => {
+      const langs = await getSupportedLanguages();
+      setLanguages(langs);
+    };
+    fetchLanguages();
+  }, []);
+
+  useEffect(() => {
+    const translate = async () => {
+      if (!word) return;
+      
+      try {
+        setLoading(true);
+        const result = await translateWord(word, sourceLang, targetLang);
+        setTranslation(result);
+      } catch (error) {
+        console.error('Translation error:', error);
+        setTranslation('Ошибка перевода');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    translate();
   }, [word, sourceLang, targetLang]);
 
-  const handleCopy = useCallback(() => {
-    navigator.clipboard.writeText(translation).then(() => {
-      // Можно добавить уведомление о копировании
-    });
-  }, [translation]);
+  useEffect(() => {
+    if (textLanguage) {
+      console.log('Setting source language:', textLanguage);
+      setSourceLang(textLanguage);
+    }
+  }, [textLanguage]);
 
-  const handleAddToFavorites = useCallback(() => {
-    // Здесь будет логика добавления в избранное
-  }, [word, translation]);
+  const getLanguageDisplay = (langCode) => {
+    console.log('Language code:', langCode, 'Type:', typeof langCode);
+    
+    if (!langCode) return 'XX';
+    
+    // Если это объект с code
+    if (langCode && typeof langCode === 'object' && langCode.code) {
+      return langCode.code.slice(0, 2).toUpperCase();
+    }
 
-  const handleSourceLanguageChange = (event) => {
-    setSourceLang(event.target.value);
+    // Если это строка
+    if (typeof langCode === 'string') {
+      return langCode.slice(0, 2).toUpperCase();
+    }
+
+    // Ищем в списке языков
+    const lang = languages.find(l => l.code === langCode);
+    if (lang && lang.value) {
+      return lang.value.slice(0, 2).toUpperCase();
+    }
+
+    return 'XX';
   };
 
-  const handleTargetLanguageChange = (event) => {
-    setTargetLang(event.target.value);
+  const handleShowDetails = () => {
+    if (onShowDetails) {
+      onShowDetails();
+    }
+    onClose();
   };
 
-  if (!word) return null;
-
-  const menuStyle = {
-    position: 'fixed',
-    top: `${position.y}px`,
-    left: `${position.x}px`,
+  const handleAddToFavorites = () => {
+    // TODO: Добавить логику добавления в избранное
+    console.log('Adding to favorites:', { word, translation });
   };
 
-  return (
-    <div className="translation-menu" style={menuStyle}>
+  if (!word || word.length > 200) return null;
+
+  const menuContent = (
+    <div 
+      className="translation-menu" 
+      ref={menuRef} 
+      style={{ 
+        position: 'fixed',
+        top: `${position?.y || 0}px`,
+        left: `${position?.x || 0}px`
+      }}
+    >
       {loading ? (
-        <div className="translation-loading">Загрузка</div>
+        <div className="translation-loading">Загрузка...</div>
       ) : (
-        <>
-          <div className="translation-content">
-            <div className="text-row">
-              <div className="text-content">{word}</div>
-              <select 
-                className="language-select" 
-                value={sourceLang} 
-                onChange={handleSourceLanguageChange}
+        <div className="translation-content">
+          <div className="text-row">
+            <div className="text-content">{word}</div>
+            <div className="language-selector">
+              <button 
+                className="language-button"
+                onClick={() => {
+                  setShowSourceLangMenu(!showSourceLangMenu);
+                  setShowTargetLangMenu(false);
+                }}
               >
-                {languages.map(lang => (
-                  <option key={lang.code} value={lang.code}>
-                    {lang.value}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="text-row">
-              <div className="text-content">{translation}</div>
-              <select 
-                className="language-select" 
-                value={targetLang} 
-                onChange={handleTargetLanguageChange}
-              >
-                {languages.map(lang => (
-                  <option key={lang.code} value={lang.code}>
-                    {lang.value}
-                  </option>
-                ))}
-              </select>
+                {getLanguageDisplay(sourceLang)}
+              </button>
+              {showSourceLangMenu && (
+                <div className="language-dropdown">
+                  {languages.map(lang => (
+                    <button
+                      key={lang.code}
+                      className="language-option"
+                      onClick={() => {
+                        setSourceLang(lang);
+                        setShowSourceLangMenu(false);
+                      }}
+                    >
+                      {lang.value}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
-          <div className="translation-actions">
-            <button 
-              className="translation-action-button" 
-              onClick={handleCopy}
-              title="Копировать перевод"
-            >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
-              </svg>
-              Копировать
-            </button>
-            <button 
-              className="translation-action-button"
-              onClick={handleAddToFavorites}
-              title="Добавить в избранное"
-            >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-              </svg>
-              В избранное
-            </button>
+
+          <div className="text-row">
+            <div className="text-content">{translation}</div>
+            <div className="language-selector">
+              <button 
+                className="language-button"
+                onClick={() => {
+                  setShowTargetLangMenu(!showTargetLangMenu);
+                  setShowSourceLangMenu(false);
+                }}
+              >
+                {getLanguageDisplay(targetLang)}
+              </button>
+              {showTargetLangMenu && (
+                <div className="language-dropdown">
+                  {languages.map(lang => (
+                    <button
+                      key={lang.code}
+                      className="language-option"
+                      onClick={() => {
+                        setTargetLang(lang);
+                        setShowTargetLangMenu(false);
+                      }}
+                    >
+                      {lang.value}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        </>
+        </div>
       )}
+      <div className="translation-actions">
+        <button 
+          className="translation-action-button" 
+          onClick={handleAddToFavorites}
+          title="В избранное"
+        >
+          <span className="button-icon">♡</span>
+          В избранное
+        </button>
+        <button 
+          className="translation-action-button" 
+          onClick={handleShowDetails}
+          title="Подробно"
+        >
+          Подробно
+          <span className="button-icon">→</span>
+        </button>
+      </div>
     </div>
   );
+
+  return createPortal(menuContent, document.body);
 };
 
 export default TranslationMenu;

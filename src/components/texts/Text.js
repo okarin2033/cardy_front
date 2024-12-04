@@ -74,24 +74,22 @@ const Text = ({ text, onDelete, onUpdate }) => {
     const selectedText = selection.toString().trim();
 
     if (selectedText) {
-      const range = selection.getRangeAt(0);
-      const rect = range.getBoundingClientRect();
-      
       setSelectedText(selectedText);
       setSelectedWord(selectedText);
       setMenuPosition({
-        x: rect.left + window.scrollX,
-        y: rect.bottom + window.scrollY + 5
+        x: event.clientX,
+        y: event.clientY - 10 // Немного выше курсора
       });
-
-      // Открываем панель с тестовым компонентом
-      openPanel(<TextPanel selectedText={selectedText} />);
     } else {
       setSelectedText('');
       setSelectedWord('');
       closePanel();
     }
-  }, [openPanel, closePanel]);
+  }, [closePanel]);
+
+  const handleShowDetails = useCallback((text) => {
+    openPanel(<TextPanel selectedText={text} />);
+  }, [openPanel]);
 
   const modules = {
     toolbar: [
@@ -196,6 +194,8 @@ const Text = ({ text, onDelete, onUpdate }) => {
           word={selectedWord}
           position={menuPosition}
           onClose={() => setSelectedWord('')}
+          textLanguage={text?.language}
+          onShowDetails={() => handleShowDetails(selectedText)}
         />
       )}
 

@@ -8,12 +8,16 @@ export const LANGUAGES = {
   ENGLISH: 'ENGLISH'
 };
 
-export const translateWord = async (word, targetLang, sourceLang = null) => {
+export const translateWord = async (word, sourceLang, targetLang) => {
   try {
+    // Извлекаем код языка, если передан объект
+    const sourceLanguage = sourceLang?.code || sourceLang;
+    const targetLanguage = targetLang?.code || targetLang;
+
     const response = await axios.post(`${API_URL}/translate`, {
       text: word,
-      targetLanguage: targetLang,
-      sourceLanguage: sourceLang
+      sourceLanguage,
+      targetLanguage
     });
     return response.data;
   } catch (error) {
@@ -28,11 +32,11 @@ export const getSupportedLanguages = async () => {
     return response.data;
   } catch (error) {
     console.error('Error fetching languages:', error);
-    // В случае ошибки возвращаем дефолтный список в том же формате
+    // В случае ошибки возвращаем дефолтный список
     return [
-      { code: LANGUAGES.JAPANESE, value: 'Japanese' },
-      { code: LANGUAGES.RUSSIAN, value: 'Russian' },
-      { code: LANGUAGES.ENGLISH, value: 'English' }
+      { code: LANGUAGES.JAPANESE, value: 'Японский' },
+      { code: LANGUAGES.RUSSIAN, value: 'Русский' },
+      { code: LANGUAGES.ENGLISH, value: 'Английский' }
     ];
   }
 };
