@@ -16,7 +16,7 @@ const Text = ({ text, onDelete, onUpdate }) => {
   const [error, setError] = useState('');
   const [selectedText, setSelectedText] = useState('');
   const [selectedWord, setSelectedWord] = useState('');
-  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+  const [menuPosition, setMenuPosition] = useState(null);
   const { openPanel, closePanel } = useSlidePanel();
 
   useEffect(() => {
@@ -70,21 +70,30 @@ const Text = ({ text, onDelete, onUpdate }) => {
   };
 
   const handleTextSelection = useCallback((event) => {
-    const selection = window.getSelection();
-    const selectedText = selection.toString().trim();
+    // Сначала сбрасываем позицию
+    setMenuPosition(null);
+    
+    setTimeout(() => {
+      const selection = window.getSelection();
+      const selectedText = selection.toString().trim();
 
-    if (selectedText) {
-      setSelectedText(selectedText);
-      setSelectedWord(selectedText);
-      setMenuPosition({
-        x: event.clientX,
-        y: event.clientY - 10 // Немного выше курсора
-      });
-    } else {
-      setSelectedText('');
-      setSelectedWord('');
-      closePanel();
-    }
+      if (selectedText) {
+        const range = selection.getRangeAt(0);
+        const rect = range.getBoundingClientRect();
+        
+        setSelectedText(selectedText);
+        setSelectedWord(selectedText);
+        setMenuPosition({
+          x: rect.left + (rect.width / 2), // центрируем по горизонтали
+          y: rect.top - 10 // немного выше выделенного текста
+        });
+      } else {
+        setSelectedText('');
+        setSelectedWord('');
+        setMenuPosition(null);
+        closePanel();
+      }
+    }, 0);
   }, [closePanel]);
 
   const handleShowDetails = useCallback((text) => {

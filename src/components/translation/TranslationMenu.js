@@ -101,14 +101,18 @@ const TranslationMenu = ({ word, position, textLanguage = LANGUAGES.JAPANESE, on
 
   if (!word || word.length > 200) return null;
 
+  // Не показываем меню, если нет валидной позиции
+  if (!position?.x || !position?.y) return null;
+
   const menuContent = (
     <div 
       className="translation-menu" 
       ref={menuRef} 
       style={{ 
         position: 'fixed',
-        top: `${position?.y || 0}px`,
-        left: `${position?.x || 0}px`
+        top: `${position.y}px`,
+        left: `${position.x}px`,
+        transform: 'translate(-50%, -100%)' // центрируем по горизонтали и сдвигаем вверх
       }}
     >
       {loading ? (
